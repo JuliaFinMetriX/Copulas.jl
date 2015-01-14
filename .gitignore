@@ -1,2 +1,8 @@
 *.jl.cov
 *.jl.mem
+/src/ParamPC.jl~
+/src/MixPC.jl~
+/src/ModPC.jl~
+/test/ParamPC_test.jl~
+/src/rand.jl~
+/src/utils.jl~
