@@ -41,7 +41,9 @@ include("ParamPC.jl")
 include("Modifyer.jl")
 include("ModPC.jl")
 include("MixPC.jl")
+include("utils.jl")
 include("pdf.jl")
+include("rand.jl")
 
 
 end # module
