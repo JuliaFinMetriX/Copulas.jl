@@ -28,7 +28,7 @@ function pdf(cop::ModPC, u::Float64, v::Float64)
     return pdf(cop.cop, cop.mod, u, v)
 end
 
-function pdf(cop::ParamPC, rot::Rotation, u::Float64, v::Float64)
+function pdf(cop::ParamPC, rot::CWRotation, u::Float64, v::Float64)
     fam, params = getFamAndParams(cop)
 
     degr = rot.degrees
@@ -44,7 +44,7 @@ function pdf(cop::ModPC, u::Array{Float64, 1},
     return pdf(cop.cop, cop.mod, u, v)
 end
 
-function pdf(cop::ParamPC, rot::Rotation,
+function pdf(cop::ParamPC, rot::CWRotation,
              u::Array{Float64, 1},
              v::Array{Float64, 1})
     checkSameLength(u, v)
@@ -57,3 +57,19 @@ function pdf(cop::ParamPC, rot::Rotation,
     val = @matlab PairCopulaPDF(fam, u, v, params, degr)
     return val
 end
+
+
+################################
+## General pdf implementation ##
+################################
+
+function pdf(cop::PairCop, u::Float64, v::Float64)
+    error("pdf function is not yet implemented for this type of copula")
+end
+
+
+function pdf(cop::PairCop,
+             u::Array{Float64, 1}, v::Array{Float64, 1})
+    error("pdf function is not yet implemented for this type of copula")
+end
+
