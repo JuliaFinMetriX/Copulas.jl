@@ -1,6 +1,6 @@
-abstract CopulaModification
-abstract Rotation <: CopulaModification
-abstract Reflection <: CopulaModification
+abstract PCModification
+abstract Rotation <: PCModification
+abstract Reflection <: PCModification
 
 ## rotation type declarations
 ##---------------------------
