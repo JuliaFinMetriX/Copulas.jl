@@ -1,6 +1,6 @@
-function checkSameLength(u::FloatVec, v::FloatVec)
-    if !(size(u, 1) == size(v, 1))
-        error("u and v vector must be of same length")
+function checkSameLength(u1::FloatVec, u2::FloatVec)
+    if !(size(u1, 1) == size(u2, 1))
+        error("u1 and u2 vector must be of same length")
     end
     return true
 end

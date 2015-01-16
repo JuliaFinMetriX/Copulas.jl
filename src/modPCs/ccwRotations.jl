@@ -57,43 +57,43 @@ end
 ## counter clockwise rotation, single point
 ##-----------------------------------------
 
-function resolve_args(rot::Rot0, u::Float64, v::Float64)
-    return (u, v)
+function resolve_args(rot::Rot0, u1::Float64, u2::Float64)
+    return (u1, u2)
 end
 
-function resolve_args(rot::Rot90, u::Float64, v::Float64)
-    return (v, 1-u)
+function resolve_args(rot::Rot90, u1::Float64, u2::Float64)
+    return (u2, 1-u1)
 end
 
-function resolve_args(rot::Rot180, u::Float64, v::Float64)
-    return (1-u, 1-v)
+function resolve_args(rot::Rot180, u1::Float64, u2::Float64)
+    return (1-u1, 1-u2)
 end
 
-function resolve_args(rot::Rot270, u::Float64, v::Float64)
-    return (1-v, u)
+function resolve_args(rot::Rot270, u1::Float64, u2::Float64)
+    return (1-u2, u1)
 end
 
 ## counter clockwise rotation, array of points
 ##--------------------------------------------
 
 function resolve_args(rot::Rot0,
-                     u::FloatVec, v::FloatVec)
-    return (u, v)
+                     u1::FloatVec, u2::FloatVec)
+    return (u1, u2)
 end
 
 function resolve_args(rot::Rot90,
-                     u::FloatVec, v::FloatVec)
-    return (v, 1-u)
+                     u1::FloatVec, u2::FloatVec)
+    return (u2, 1-u1)
 end
 
 function resolve_args(rot::Rot180,
-                     u::FloatVec, v::FloatVec)
-    return (1-u, 1-v)
+                     u1::FloatVec, u2::FloatVec)
+    return (1-u1, 1-u2)
 end
 
 function resolve_args(rot::Rot270,
-                     u::FloatVec, v::FloatVec)
-    return (1-v, u)
+                     u1::FloatVec, u2::FloatVec)
+    return (1-u2, u1)
 end
 
 ##############################################
@@ -105,22 +105,22 @@ end
 ##--------------------------------------------
 
 function resolve_pval(rot::Rot0, pVal::FloatVec,
-                     u::FloatVec, v::FloatVec)
+                     u1::FloatVec, u2::FloatVec)
     return pVal
 end
 
 function resolve_pval(rot::Rot90, pVal::FloatVec,
-                     u::FloatVec, v::FloatVec)
-    return v - pVal
+                     u1::FloatVec, u2::FloatVec)
+    return u2 - pVal
 end
 
 function resolve_pval(rot::Rot180, pVal::FloatVec,
-                     u::FloatVec, v::FloatVec)
-    return u + v + pVal - 1
+                     u1::FloatVec, u2::FloatVec)
+    return u1 + u2 + pVal - 1
 end
 
 function resolve_pval(rot::Rot270, pVal::FloatVec,
-                     u::FloatVec, v::FloatVec)
-    return u - pVal
+                     u1::FloatVec, u2::FloatVec)
+    return u1 - pVal
 end
 
