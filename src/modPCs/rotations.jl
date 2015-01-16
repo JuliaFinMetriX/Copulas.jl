@@ -70,22 +70,22 @@ end
 ##------------------------------------
 
 function resolve_args(rot::Rot0,
-                      u1::Array{Float64, 1}, u2::Array{Float64, 1})
+                      u1::FloatVec, u2::FloatVec)
     return (u1, u2)
 end
 
 function resolve_args(rot::Rot90,
-                      u1::Array{Float64, 1}, u2::Array{Float64, 1})
+                      u1::FloatVec, u2::FloatVec)
     return (1-u2, u1)
 end
 
 function resolve_args(rot::Rot180,
-                     u1::Array{Float64, 1}, u2::Array{Float64, 1})
+                     u1::FloatVec, u2::FloatVec)
     return (1-u1, 1-u2)
 end
 
 function resolve_args(rot::Rot270,
-                     u1::Array{Float64, 1}, u2::Array{Float64, 1})
+                     u1::FloatVec, u2::FloatVec)
     return (u2, 1-u1)
 end
 
@@ -96,23 +96,23 @@ end
 ## clockwise rotation, array of points
 ##------------------------------------
 
-function resolve_pval(rot::Rot0, pVal::Array{Float64, 1},
-                      u1::Array{Float64, 1}, u2::Array{Float64, 1})
+function resolve_pval(rot::Rot0, pVal::FloatVec,
+                      u1::FloatVec, u2::FloatVec)
     return pVal
 end
 
-function resolve_pval(rot::Rot90, pVal::Array{Float64, 1},
-                      u1::Array{Float64, 1}, u2::Array{Float64, 1})
+function resolve_pval(rot::Rot90, pVal::FloatVec,
+                      u1::FloatVec, u2::FloatVec)
     return u1 - pVal
 end
 
-function resolve_pval(rot::Rot180, pVal::Array{Float64, 1},
-                      u1::Array{Float64, 1}, u2::Array{Float64, 1})
+function resolve_pval(rot::Rot180, pVal::FloatVec,
+                      u1::FloatVec, u2::FloatVec)
     return u1 + u2 + pVal - 1
 end
 
-function resolve_pval(rot::Rot270, pVal::Array{Float64, 1},
-                      u1::Array{Float64, 1}, u2::Array{Float64, 1})
+function resolve_pval(rot::Rot270, pVal::FloatVec,
+                      u1::FloatVec, u2::FloatVec)
     return u2 - pVal
 end
 
@@ -138,7 +138,7 @@ end
 ##----
 
 function pdf(cop::PairCop, rot::CWRotation,
-             u1::Array{Float64, 1}, u2::Array{Float64, 1})
+             u1::FloatVec, u2::FloatVec)
     v1, v2 = resolve_args(rot, u1, u2)
     return pdf(cop, v1, v2)
 end
@@ -147,7 +147,7 @@ end
 ##----
 
 function cdf(cop::PairCop, rot::CWRotation,
-             u1::Array{Float64, 1}, u2::Array{Float64, 1})
+             u1::FloatVec, u2::FloatVec)
     v1, v2 = resolve_args(rot, u1, u2)
     p = cdf(cop, u1, u2)
     return resolve_pval(rot, p, u1, u2)
@@ -157,22 +157,22 @@ end
 ##------------
 
 function hfun(cop::PairCop, rot::Rot0,
-              u1::Array{Float64, 1}, u2::Array{Float64, 1})
+              u1::FloatVec, u2::FloatVec)
     return hfun(cop, u1, u2)
 end
 
 function hfun(cop::PairCop, rot::Rot90,
-              u1::Array{Float64, 1}, u2::Array{Float64, 1})
+              u1::FloatVec, u2::FloatVec)
     return vfun(cop, u1, 1-u2)
 end
 
 function hfun(cop::PairCop, rot::Rot180,
-              u1::Array{Float64, 1}, u2::Array{Float64, 1})
+              u1::FloatVec, u2::FloatVec)
     return 1 - hfun(cop, 1-u1, 1-u2)
 end
 
 function hfun(cop::PairCop, rot::Rot270,
-              u1::Array{Float64, 1}, u2::Array{Float64, 1})
+              u1::FloatVec, u2::FloatVec)
     return 1 - vfun(cop, 1-u1, u2)
 end
 
@@ -180,22 +180,22 @@ end
 ##------------
 
 function vfun(cop::PairCop, rot::Rot0,
-              u2::Array{Float64, 1}, u1::Array{Float64, 1})
+              u2::FloatVec, u1::FloatVec)
     return vfun(cop, u2, u1)
 end
 
 function vfun(cop::PairCop, rot::Rot90,
-              u2::Array{Float64, 1}, u1::Array{Float64, 1})
+              u2::FloatVec, u1::FloatVec)
     return 1 - hfun(cop, 1-u2, u1)
 end
 
 function vfun(cop::PairCop, rot::Rot180,
-              u2::Array{Float64, 1}, u1::Array{Float64, 1})
+              u2::FloatVec, u1::FloatVec)
     return 1 - vfun(cop, 1-u2, 1-u1)
 end
 
 function vfun(cop::PairCop, rot::Rot270,
-              u2::Array{Float64, 1}, u1::Array{Float64, 1})
+              u2::FloatVec, u1::FloatVec)
     return hfun(cop, u2, 1-u1)
 end
 

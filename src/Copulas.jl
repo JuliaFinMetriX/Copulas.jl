@@ -2,6 +2,8 @@ module Copulas
 
 using MATLAB
 
+typealias FloatVec Array{Float64, 1}
+
 # package code goes here
 export # copula types
 PairCop,

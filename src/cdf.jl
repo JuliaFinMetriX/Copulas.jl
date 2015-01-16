@@ -17,12 +17,12 @@ function cdf(cop::ModPC, u::Float64, v::Float64)
 end
 
 function cdf(cop::PairCop,
-             u::Array{Float64, 1}, v::Array{Float64, 1})
+             u::FloatVec, v::FloatVec)
     error("cdf function is not yet implemented for this type of copula")
 end
 
 function cdf(cop::ModPC,
-             u::Array{Float64, 1}, v::Array{Float64, 1})
+             u::FloatVec, v::FloatVec)
     ## resolve transformation
     uHat, vHat = resolve_args(cop.mod, u, v)
 

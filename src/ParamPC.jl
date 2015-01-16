@@ -36,7 +36,7 @@ copTypeNames =
 macro defineParamCop(nam)
     esc(quote
         type $(nam) <: Copulas.ParamPC
-            params::Array{Float64, 1}
+            params::FloatVec
         end
     end)
 end

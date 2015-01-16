@@ -12,7 +12,7 @@ function pdf(cop::ModPC, u1::Float64, u2::Float64)
 end
 
 function pdf(cop::ModPC,
-             u1::Array{Float64, 1}, u2::Array{Float64, 1})
+             u1::FloatVec, u2::FloatVec)
     return pdf(cop.cop, cop.mod, u1, u2)
 end
 
@@ -21,7 +21,7 @@ function cdf(cop::ModPC, u1::Float64, u2::Float64)
 end
 
 function cdf(cop::ModPC,
-             u1::Array{Float64, 1}, u2::Array{Float64, 1})
+             u1::FloatVec, u2::FloatVec)
     return cdf(cop.cop, cop.mod, u1, u2)
 end
 

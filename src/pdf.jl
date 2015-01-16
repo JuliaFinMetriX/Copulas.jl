@@ -1,17 +1,13 @@
-## parametric copula pdf
-##----------------------
+## handle single observation
+##--------------------------
 
-function pdf(cop::ParamPC, u::Float64, v::Float64)
-    fam, params = getFamAndParams(cop)
-
-    @mput fam u v params
-    val = @matlab PairCopulaPDF(fam, u, v, params)
-    return val
+function pdf(cop::PairCop, u1::Float64, u2::Float64)
+    return pdf(cop, [u1], [u2])
 end
 
 ## vector inputs
-function pdf(cop::ParamPC, u::Array{Float64, 1},
-             v::Array{Float64, 1})
+function pdf(cop::ParamPC, u::FloatVec,
+             v::FloatVec)
     checkSameLength(u, v)
         
     fam, params = getFamAndParams(cop)
@@ -39,14 +35,14 @@ function pdf(cop::ParamPC, rot::CWRotation, u::Float64, v::Float64)
 end
 
 ## vector inputs
-function pdf(cop::ModPC, u::Array{Float64, 1},
-             v::Array{Float64, 1})
+function pdf(cop::ModPC, u::FloatVec,
+             v::FloatVec)
     return pdf(cop.cop, cop.mod, u, v)
 end
 
 function pdf(cop::ParamPC, rot::CWRotation,
-             u::Array{Float64, 1},
-             v::Array{Float64, 1})
+             u::FloatVec,
+             v::FloatVec)
     checkSameLength(u, v)
     
     fam, params = getFamAndParams(cop)
@@ -69,7 +65,7 @@ end
 
 
 function pdf(cop::PairCop,
-             u::Array{Float64, 1}, v::Array{Float64, 1})
+             u::FloatVec, v::FloatVec)
     error("pdf function is not yet implemented for this type of copula")
 end
 
