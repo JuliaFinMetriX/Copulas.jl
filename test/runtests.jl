@@ -1,7 +1,8 @@
 using Copulas
 using Base.Test
 
-tests = ["ParamPC_test.jl"
+tests = ["utils_test.jl",
+         "ParamPC_MAT_test.jl"
          ]
 
 println("Running copula tests:")

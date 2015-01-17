@@ -1,0 +1,11 @@
+## vector inputs
+function pdf(cop::ParamPC, u1::FloatVec,
+             u2::FloatVec)
+    checkSameLength(u1, u2)
+        
+    fam, params = getFamAndParams(cop)
+
+    @mput fam u1 u2 params
+    val = @matlab PairCopulaPDF(fam, u1, u2, params)
+    return val
+end

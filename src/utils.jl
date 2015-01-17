@@ -5,8 +5,8 @@ function checkSameLength(u1::FloatVec, u2::FloatVec)
     return true
 end
 
-function getFamAndParams(cop::ParamPC)
-    return (float(getCopId(cop)), paramsMatlab(cop))
+function getFamAndParams(cop::ParamPC_MAT)
+    return (float(getVineCPPId(cop)), params(cop))
 end
 
 ## this functions exists so that copula types at some point can be
@@ -16,6 +16,6 @@ end
 ## return a tuple. This allows additional flexibility, since a single
 ## parameter then can be more than just a single Float value, but it
 ## could also be a covariance matrix or a PCModification.
-function paramsMatlab(cop::PairCop)
+function params(cop::ParamPC_MAT)
     return cop.params
 end

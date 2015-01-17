@@ -89,47 +89,6 @@ function resolve_args(rot::Rot270,
     return (u2, 1-u1)
 end
 
-##############################################
-## resolving cdf p values for modifications ##
-##############################################
-
-## clockwise rotation, array of points
-##------------------------------------
-
-function resolve_pval(rot::Rot0, pVal::FloatVec,
-                      u1::FloatVec, u2::FloatVec)
-    return pVal
-end
-
-function resolve_pval(rot::Rot90, pVal::FloatVec,
-                      u1::FloatVec, u2::FloatVec)
-    return u1 - pVal
-end
-
-function resolve_pval(rot::Rot180, pVal::FloatVec,
-                      u1::FloatVec, u2::FloatVec)
-    return u1 + u2 + pVal - 1
-end
-
-function resolve_pval(rot::Rot270, pVal::FloatVec,
-                      u1::FloatVec, u2::FloatVec)
-    return u2 - pVal
-end
-
-################################
-## Extensions to single point ##
-################################
-
-function resolve_args(rot::CWRotation,
-                      u1::Float64, u2::Float64)
-    return resolve_pval(rot, [u1], [u2])
-end
-
-function resolve_pval(rot::CWRotation, pVal::Float64,
-                      u1::Float64, u2::Float64)
-    return resolve_pval(rot, [pVal], [u1], [u2])
-end
-
 ##########################
 ## function evaluations ##
 ##########################
@@ -146,11 +105,24 @@ end
 ## cdf
 ##----
 
-function cdf(cop::PairCop, rot::CWRotation,
+function cdf(cop::PairCop, rot::Rot0,
              u1::FloatVec, u2::FloatVec)
-    v1, v2 = resolve_args(rot, u1, u2)
-    p = cdf(cop, u1, u2)
-    return resolve_pval(rot, p, u1, u2)
+    return cdf(cop, u1, u2)
+end
+
+function cdf(cop::PairCop, rot::Rot90,
+             u1::FloatVec, u2::FloatVec)
+    return u1 - cdf(cop, 1-u2, u1)
+end
+
+function cdf(cop::PairCop, rot::Rot180,
+             u1::FloatVec, u2::FloatVec)
+    return u1 + u2 + cdf(cop, 1-u1, 1-u2) - 1
+end
+
+function cdf(cop::PairCop, rot::Rot270,
+             u1::FloatVec, u2::FloatVec)
+    return u2 - cdf(cop, u2, 1-u1)
 end
 
 ## h-functions
