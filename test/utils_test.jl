@@ -21,6 +21,6 @@ rho = Copulas.params(cop)
 
 famId, rho = Copulas.getFamAndParams(cop)
 @test famId == 10.0
-@test rho == [-0.5]
+@test rho == [-0.5]'
 
 end

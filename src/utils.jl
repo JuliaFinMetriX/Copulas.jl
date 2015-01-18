@@ -6,7 +6,7 @@ function checkSameLength(u1::FloatVec, u2::FloatVec)
 end
 
 function getFamAndParams(cop::ParamPC_MAT)
-    return (float(getVineCPPId(cop)), params(cop))
+    return (float(getVineCPPId(cop)), params(cop)')
 end
 
 ## this functions exists so that copula types at some point can be
