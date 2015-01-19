@@ -63,6 +63,7 @@ params
 
 include("PairCop.jl")
 include("utils.jl")
+include("ParamPCs/clayton.jl")
 include("ParamPC_MATs/ParamPC_MAT.jl")
 include("ModPCs/Modifyer.jl")
 include("ModPCs/ModPC.jl")
