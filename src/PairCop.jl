@@ -6,7 +6,9 @@
 abstract PairCop
 abstract AbstractParamPC <: PairCop
 abstract ParamPC <: AbstractParamPC
-abstract ParamPC_MAT <: AbstractParamPC
+abstract ParamPC_VineCopulaCpp <: AbstractParamPC
+abstract ParamPC_MAT <: ParamPC_VineCopulaCpp
+abstract ParamPC_Cpp <: ParamPC_VineCopulaCpp
 
     
 ##################

@@ -1,53 +1,19 @@
-
-
-#######################
-## VineCPP interface ##
-#######################
-
-## copula ID lookup tables
-##########################
-
-# order determines copula IDs!
-const vineCPP_cops = [:Indep,
-                      :AMH,
-                      :AsymFGM,
-                      :BB1,
-                      :BB6,
-                      :BB7,
-                      :BB8,
-                      :Clayton,
-                      :FGM,
-                      :Frank,
-                      :Gaussian,
-                      :Gumbel,
-                      :IteratedFGM,
-                      :Joe,
-                      :PartialFrank,
-                      :Plackett,
-                      :Tawn1,
-                      :Tawn2,
-                      :Tawn,
-                      :t]
-
-const vineCPP_IDs = [vineCPP_cops[ii] => ii-1
-                     for ii=1:length(vineCPP_cops)]
-
-function getVineCPPId(nam::Symbol)
-    return vineCPP_IDs[nam]
-end
+#################################
+## Matlab VineCopula interface ##
+#################################
 
 #######################################
-## create parametric VineCPP copulas ##
+## create parametric VineCpp copulas ##
 #######################################
 
-copTypeNames =
-    [symbol(string(vineCPP_cops[ii], "PC_MAT"))
-     for ii=1:length(vineCPP_cops)]
+copTypeNames_MAT =
+    [symbol(string(vineCpp_cops[ii], "PC_MAT"))
+     for ii=1:length(vineCpp_cops)]
 
 ## define copula types through macro
 ##----------------------------------
 
-macro defineParamCop(nam)
+macro defineParamCopMAT(nam)
     esc(quote
         type $(nam) <: Copulas.ParamPC_MAT
             params::FloatVec
@@ -55,39 +21,33 @@ macro defineParamCop(nam)
     end)
 end
         
-for cop in copTypeNames
-    eval(macroexpand(:(@defineParamCop $cop)))
+for cop in copTypeNames_MAT
+    eval(macroexpand(:(@defineParamCopMAT $cop)))
 end
 
 ###########################
-## VineCPP ID interfaces ##
+## VineCpp ID interfaces ##
 ###########################
 
-## get VineCPP Id for copula object
+## get VineCpp Id for copula object
 ##---------------------------------
 
-const type2idDict = [copTypeNames[ii] => (ii-1)::Int for ii=1:length(copTypeNames)]
-
-function getVineCPPId(cop::ParamPC_MAT)
-    return type2idDict[symbol(string(typeof(cop)))]
+const type2idDictMAT = [copTypeNames_MAT[ii] => (ii-1)::Int for ii=1:length(copTypeNames_MAT)]
+                        
+function getVineCppId(cop::ParamPC_MAT)
+    return type2idDictMAT[symbol(string(typeof(cop)))]
 end
 
-## get copula name for ID
-##-----------------------
-
-function getCopNam(ii::Int)
-    return vineCPP_cops[ii+1]
-end
 
 ## get copula type for ID
 ##-----------------------
 
-function getCopType(ii::Int)
-    return copTypeNames[ii+1]
+function getCopType_MAT(ii::Int)
+    return copTypeNames_MAT[ii+1]
 end
 
 #######################
-## VineCPP functions ##
+## VineCpp functions ##
 #######################
 
 ## pdf function

@@ -1,6 +1,6 @@
 module Copulas
 
-using MATLAB
+## using MATLAB
 
 typealias FloatVec Array{Float64, 1}
 
@@ -64,7 +64,8 @@ params
 include("PairCop.jl")
 include("utils.jl")
 include("ParamPCs/clayton.jl")
-include("ParamPC_MATs/ParamPC_MAT.jl")
+include("ParamPCs_Cpp/ParamPC_Cpp.jl")
+## include("ParamPC_MATs/ParamPC_MAT.jl")
 include("ModPCs/Modifyer.jl")
 include("ModPCs/ModPC.jl")
 include("ModPCs/rotations.jl")

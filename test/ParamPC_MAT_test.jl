@@ -10,8 +10,8 @@ using MATLAB
 
 @test Copulas.getCopNam(7) == :Clayton
 @test Copulas.getCopNam(15) == :Plackett
-@test Copulas.getCopType(8) == :FGMPC_MAT
-@test Copulas.getCopType(4) == :BB6PC_MAT
+@test Copulas.getCopType_MAT(8) == :FGMPC_MAT
+@test Copulas.getCopType_MAT(4) == :BB6PC_MAT
 
 ## type construction
 ##------------------

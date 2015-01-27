@@ -2,7 +2,8 @@ using Copulas
 using Base.Test
 
 tests = ["utils_test.jl",
-         "ParamPC_MAT_test.jl"
+         #"ParamPC_MAT_test.jl",
+         ParamPC_Cpp_tests.jl
          ]
 
 println("Running copula tests:")
