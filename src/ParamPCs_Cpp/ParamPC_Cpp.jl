@@ -125,14 +125,58 @@ function pdf(cop::ParamPC_Cpp, u1::FloatVec, u2::FloatVec)
     fam, params = getFamAndParams(cop)
 
     nObs = length(u1)
-    param = 5.3
     retVals = zeros(Float64, nObs)
 
     ccall((:_Z13PairCopulaPDFiPKdPdS1_S1_j, VineCppPath),
           Void,
           (Int, Ptr{Float64}, Ptr{Float64}, Ptr{Float64},
            Ptr{Float64}, Int),
-          fam, &param, u1, u2, retVals, nObs)
+          fam, params, u1, u2, retVals, nObs)
+
+    return retVals
+end
+
+function cdf(cop::ParamPC_Cpp, u1::FloatVec, u2::FloatVec)
+    fam, params = getFamAndParams(cop)
+
+    nObs = length(u1)
+    retVals = zeros(Float64, nObs)
+
+    ccall((:_Z13PairCopulaCDFiPKdPdS1_S1_j, VineCppPath),
+          Void,
+          (Int, Ptr{Float64}, Ptr{Float64}, Ptr{Float64},
+           Ptr{Float64}, Int),
+          fam, params, u1, u2, retVals, nObs)
+
+    return retVals
+end
+
+function hfun(cop::ParamPC_Cpp, u1::FloatVec, u2::FloatVec)
+    fam, params = getFamAndParams(cop)
+
+    nObs = length(u1)
+    retVals = zeros(Float64, nObs)
+
+    ccall((:_Z14PairCopulaHfuniPKdPdS1_S1_j, VineCppPath),
+          Void,
+          (Int, Ptr{Float64}, Ptr{Float64}, Ptr{Float64},
+           Ptr{Float64}, Int),
+          fam, params, u1, u2, retVals, nObs)
+
+    return retVals
+end
+
+function vfun(cop::ParamPC_Cpp, u1::FloatVec, u2::FloatVec)
+    fam, params = getFamAndParams(cop)
+
+    nObs = length(u1)
+    retVals = zeros(Float64, nObs)
+
+    ccall((:_Z14PairCopulaVfuniPKdPdS1_S1_j, VineCppPath),
+          Void,
+          (Int, Ptr{Float64}, Ptr{Float64}, Ptr{Float64},
+           Ptr{Float64}, Int),
+          fam, params, u1, u2, retVals, nObs)
 
     return retVals
 end

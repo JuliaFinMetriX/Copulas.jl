@@ -8,8 +8,8 @@ testCopFam1 <- function(ind, nam, u1, u2, fam, param1){
     
     vals <- rbind(BiCopPDF(u1, u2, fam, param1),
                   BiCopCDF(u1, u2, fam, param1),
-                  BiCopHfunc(u1, u2, fam, param1)$hfunc1,
-                  BiCopHfunc(u1, u2, fam, param1)$hfunc2
+                  BiCopHfunc(u1, u2, fam, param1)$hfunc2,
+                  BiCopHfunc(u1, u2, fam, param1)$hfunc1
                   )
     
     nams <- rbind(paste("pdf", nam, ind, sep = "_"),
@@ -25,8 +25,8 @@ testCopFam2 <- function(ind, nam, u1, u2, fam, param1, param2){
     
     vals <- rbind(BiCopPDF(u1, u2, fam, param1, param2),
                   BiCopCDF(u1, u2, fam, param1, param2),
-                  BiCopHfunc(u1, u2, fam, param1, param2)$hfunc1,
-                  BiCopHfunc(u1, u2, fam, param1, param2)$hfunc2
+                  BiCopHfunc(u1, u2, fam, param1, param2)$hfunc2,
+                  BiCopHfunc(u1, u2, fam, param1, param2)$hfunc1
                   )
     
     nams <- rbind(paste("pdf", nam, ind, sep = "_"),
