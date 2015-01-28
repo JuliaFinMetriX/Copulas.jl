@@ -5,19 +5,6 @@
 
 const VineCppPath = joinpath(Pkg.dir("Copulas"),
                              "src/VineCopulaCPP/libVineCPP.so.1.0")
-                             
-## u1 = [0.3; 0.2]
-## u2 = [0.4; 0.8]
-## fam = 11
-## param = 5.3
-## n = 2
-## val = [4.4; 4.1]
-
-## val2 = ccall((:_Z13PairCopulaPDFiPKdPdS1_S1_j, libPath),
-##              Void,
-##              (Int, Ptr{Float64}, Ptr{Float64}, Ptr{Float64},
-##               Ptr{Float64}, Int),
-##              fam, &param, u1, u2, val, n)
 
 pdfName = :_Z13PairCopulaPDFiPKdPdS1_S1_j
 cdfName = :_Z13PairCopulaCDFiPKdPdS1_S1_j
@@ -180,79 +167,4 @@ function vfun(cop::ParamPC_Cpp, u1::FloatVec, u2::FloatVec)
 
     return retVals
 end
-
-## ## cdf function
-## ##-------------
-
-## function cdf(cop::ParamPC_MAT, u1::FloatVec, u2::FloatVec)
-##     fam, params = getFamAndParams(cop)
-
-##     val = []
-##     try
-##         val = mxcall(:PairCopulaCDF, 1, fam, u1, u2, params)
-##     catch
-##         error("Call of Matlab cdf did not return a value!")
-##     end
-##     return val
-## end
-
-## ## h-function
-## ##-----------
-
-## function hfun(cop::ParamPC_MAT, u1::FloatVec, u2::FloatVec)
-##     fam, params = getFamAndParams(cop)
-
-##     val = []
-##     try
-##         val = mxcall(:PairCopulaHfun, 1, fam, u1, u2, params)
-##     catch
-##         error("Call of Matlab h-function did not return a value!")
-##     end
-##     return val
-## end
-
-## ## v-function
-## ##-----------
-
-## function vfun(cop::ParamPC_MAT, u2::FloatVec, u1::FloatVec)
-##     fam, params = getFamAndParams(cop)
-
-##     val = []
-##     try
-##         val = mxcall(:PairCopulaVfun, 1, fam, u2, u1, params)
-##     catch
-##         error("Call of Matlab v-function did not return a value!")
-##     end
-##     return val
-## end
-
-## ## hinv-function
-## ##-----------
-
-## function hinv(cop::ParamPC_MAT, u1::FloatVec, u2::FloatVec)
-##     fam, params = getFamAndParams(cop)
-
-##     val = []
-##     try
-##         val = mxcall(:PairCopulaInvHfun, 1, fam, u1, u2, params)
-##     catch
-##         error("Call of Matlab inverse h-fun did not return a value!")
-##     end
-##     return val
-## end
-
-## ## vinv-function
-## ##-----------
-
-## function vinv(cop::ParamPC_MAT, u2::FloatVec, u1::FloatVec)
-##     fam, params = getFamAndParams(cop)
-
-##     val = []
-##     try
-##         val = mxcall(:PairCopulaInvVfun, 1, fam, u2, u1, params)
-##     catch
-##         error("Call of Matlab inverse v-fun did not return a value!")
-##     end
-##     return val
-## end
 

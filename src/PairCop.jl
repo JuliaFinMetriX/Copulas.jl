@@ -4,13 +4,20 @@
 
 ## abstract PairCop
 abstract PairCop
-abstract AbstractParamPC <: PairCop
-abstract ParamPC <: AbstractParamPC
-abstract ParamPC_VineCopulaCpp <: AbstractParamPC
-abstract ParamPC_MAT <: ParamPC_VineCopulaCpp
-abstract ParamPC_Cpp <: ParamPC_VineCopulaCpp
 
-    
+## parametric copula types
+##------------------------
+
+abstract AbstractParamPC <: PairCop
+
+## native julia implementation
+abstract ParamPC <: AbstractParamPC
+
+## based on VineCopulaCPP
+abstract ParamPC_VineCopulaCpp <: AbstractParamPC
+abstract ParamPC_MAT <: ParamPC_VineCopulaCpp # using matlab
+abstract ParamPC_Cpp <: ParamPC_VineCopulaCpp # using cpp
+
 ##################
 ## pdf function ##
 ##################

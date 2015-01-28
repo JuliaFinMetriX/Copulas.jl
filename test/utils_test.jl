@@ -12,15 +12,20 @@ using Base.Test
 ## params
 ##-------
 
-cop = Copulas.GaussianPC_MAT([-0.5])
+## cop = Copulas.GaussianPC_MAT([-0.5])
+## rho = Copulas.params(cop)
+## @test rho == [-0.5]
+
+cop = Copulas.GaussianPC_Cpp([-0.5])
 rho = Copulas.params(cop)
 @test rho == [-0.5]
+
 
 ## getFamAndParams
 ##----------------
 
 famId, rho = Copulas.getFamAndParams(cop)
 @test famId == 10.0
-@test rho == [-0.5]'
+@test rho == [-0.5]
 
 end
