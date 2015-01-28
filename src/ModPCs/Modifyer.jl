@@ -1,8 +1,10 @@
 abstract PCModification
+
 abstract Rotation <: PCModification
+abstract Reflection <: PCModification
+
 abstract CWRotation <: Rotation
 abstract counterCWRotation <: Rotation
-abstract Reflection <: PCModification
 
 abstract NoModification <: PCModification
 

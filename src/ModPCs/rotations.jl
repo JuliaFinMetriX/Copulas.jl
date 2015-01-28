@@ -171,3 +171,48 @@ function vfun(cop::PairCop, rot::Rot270,
     return hfun(cop, u2, 1-u1)
 end
 
+## inverse h-functions
+##--------------------
+
+function hinv(cop::PairCop, rot::Rot0,
+              u1::FloatVec, u2::FloatVec)
+    return hinv(cop, u1, u2)
+end
+
+function hinv(cop::PairCop, rot::Rot90,
+              u1::FloatVec, u2::FloatVec)
+    return vinv(cop, u1, 1-u2)
+end
+
+function hinv(cop::PairCop, rot::Rot180,
+              u1::FloatVec, u2::FloatVec)
+    return 1 - hinv(cop, 1-u1, 1-u2)
+end
+
+function hinv(cop::PairCop, rot::Rot270,
+              u1::FloatVec, u2::FloatVec)
+    return 1 - vinv(cop, 1-u1, u2)
+end
+
+## inverse v-functions
+##--------------------
+
+function vinv(cop::PairCop, rot::Rot0,
+              u2::FloatVec, u1::FloatVec)
+    return vinv(cop, u2, u1)
+end
+
+function vinv(cop::PairCop, rot::Rot90,
+              u2::FloatVec, u1::FloatVec)
+    return 1 - hinv(cop, 1-u2, u1)
+end
+
+function vinv(cop::PairCop, rot::Rot180,
+              u2::FloatVec, u1::FloatVec)
+    return 1 - vinv(cop, 1-u2, 1-u1)
+end
+
+function vinv(cop::PairCop, rot::Rot270,
+              u2::FloatVec, u1::FloatVec)
+    return hinv(cop, u2, 1-u1)
+end
