@@ -14,9 +14,7 @@ abstract AbstractParamPC <: PairCop
 abstract ParamPC <: AbstractParamPC
 
 ## based on VineCopulaCPP
-abstract ParamPC_VineCopulaCpp <: AbstractParamPC
-abstract ParamPC_MAT <: ParamPC_VineCopulaCpp # using matlab
-abstract ParamPC_Cpp <: ParamPC_VineCopulaCpp # using cpp
+abstract ParamPC_Cpp <: AbstractParamPC
 
 ##################
 ## pdf function ##

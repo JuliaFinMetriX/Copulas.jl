@@ -12,10 +12,6 @@ using Base.Test
 ## params
 ##-------
 
-## cop = Copulas.GaussianPC_MAT([-0.5])
-## rho = Copulas.params(cop)
-## @test rho == [-0.5]
-
 cop = Copulas.GaussianPC_Cpp([-0.5])
 rho = Copulas.params(cop)
 @test rho == [-0.5]

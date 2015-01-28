@@ -1,7 +1,5 @@
 module Copulas
 
-## using MATLAB
-
 typealias FloatVec Array{Float64, 1}
 
 # package code goes here
@@ -9,7 +7,7 @@ export # copula types
 PairCop,
 AbstractParamPC,
 ParamPC,
-ParamPC_MAT,
+ParamPC_Cpp,
 ModPC,
 MixPC,
 # parametric copula types
@@ -33,27 +31,27 @@ Tawn1PC,
 Tawn2PC,
 TawnPC,
 tPC,
-# parametric copula types, MATLAB implementation
-IndepPC_MAT,
-AMHPC_MAT,
-AsymFGMPC_MAT,
-BB1PC_MAT,
-BB6PC_MAT,
-BB7PC_MAT,
-BB8PC_MAT,
-ClaytonPC_MAT,
-FGMPC_MAT,
-FrankPC_MAT,
-GaussianPC_MAT,
-GumbelPC_MAT,
-IteratedFGMPC_MAT,
-JoePC_MAT,
-PartialFrankPC_MAT,
-PlackettPC_MAT,
-Tawn1PC_MAT,
-Tawn2PC_MAT,
-TawnPC_MAT,
-tPC_MAT,
+# parametric copula types, Cpp implementation
+IndepPC_Cpp,
+AMHPC_Cpp,
+AsymFGMPC_Cpp,
+BB1PC_Cpp,
+BB6PC_Cpp,
+BB7PC_Cpp,
+BB8PC_Cpp,
+ClaytonPC_Cpp,
+FGMPC_Cpp,
+FrankPC_Cpp,
+GaussianPC_Cpp,
+GumbelPC_Cpp,
+IteratedFGMPC_Cpp,
+JoePC_Cpp,
+PartialFrankPC_Cpp,
+PlackettPC_Cpp,
+Tawn1PC_Cpp,
+Tawn2PC_Cpp,
+TawnPC_Cpp,
+tPC_Cpp,
 # functions
 checkSameLength,
 getVineCPPId,
@@ -65,7 +63,6 @@ include("PairCop.jl")
 include("utils.jl")
 include("ParamPCs/clayton.jl")
 include("ParamPCs_Cpp/ParamPC_Cpp.jl")
-## include("ParamPC_MATs/ParamPC_MAT.jl")
 include("ModPCs/Modifyer.jl")
 include("ModPCs/ModPC.jl")
 include("ModPCs/rotations.jl")
