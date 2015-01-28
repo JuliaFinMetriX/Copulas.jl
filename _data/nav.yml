@@ -1,0 +1,8 @@
+- title: "Home"
+  href: "/index.html"
+
+- title: "Parametric Copulas"
+  href: "/ParamPCs/Clayton.html"
+ 
+- title: "Modified copulas"
+  href: "/ModPCs/index.html"
