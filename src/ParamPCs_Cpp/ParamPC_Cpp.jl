@@ -153,7 +153,8 @@ function hfun(cop::ParamPC_Cpp, u1::FloatVec, u2::FloatVec)
     return retVals
 end
 
-function vfun(cop::ParamPC_Cpp, u1::FloatVec, u2::FloatVec)
+function vfun(cop::ParamPC_Cpp, u2::FloatVec, u1::FloatVec)
+    # u2|u1
     fam, params = getFamAndParams(cop)
 
     nObs = length(u1)
@@ -168,3 +169,33 @@ function vfun(cop::ParamPC_Cpp, u1::FloatVec, u2::FloatVec)
     return retVals
 end
 
+function hinv(cop::ParamPC_Cpp, u1::FloatVec, u2::FloatVec)
+    fam, params = getFamAndParams(cop)
+
+    nObs = length(u1)
+    retVals = zeros(Float64, nObs)
+
+    ccall((:_Z17PairCopulaInvHfuniPKdPdS1_S1_j, VineCppPath),
+          Void,
+          (Int, Ptr{Float64}, Ptr{Float64}, Ptr{Float64},
+           Ptr{Float64}, Int),
+          fam, params, u1, u2, retVals, nObs)
+
+    return retVals
+end
+
+function vinv(cop::ParamPC_Cpp, u2::FloatVec, u1::FloatVec)
+    # u2|u1
+    fam, params = getFamAndParams(cop)
+
+    nObs = length(u1)
+    retVals = zeros(Float64, nObs)
+
+    ccall((:_Z17PairCopulaInvVfuniPKdPdS1_S1_j, VineCppPath),
+          Void,
+          (Int, Ptr{Float64}, Ptr{Float64}, Ptr{Float64},
+           Ptr{Float64}, Int),
+          fam, params, u1, u2, retVals, nObs)
+
+    return retVals
+end
