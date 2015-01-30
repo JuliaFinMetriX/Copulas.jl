@@ -197,11 +197,11 @@ testPoints = [(0.3, 0.7),
               (0.0001, 0.0001)]
 
 for pts in testPoints
+    u1, u2 = pts
     println("-----------------")
     println("u1: $u1, u2: $u2")
     println("-----------------")
     for cop in cops
-        u1, u2 = pts
         q = Copulas.hfun(cop, u1, u2)
         u1_hat = Copulas.hinv(cop, q, [u2])
         hdiff1 = u1 - u1_hat

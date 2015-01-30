@@ -62,6 +62,7 @@ params
 include("PairCop.jl")
 include("utils.jl")
 include("ParamPCs/clayton.jl")
+include("ParamPCs/asym_fgm.jl")
 include("ParamPCs_Cpp/ParamPC_Cpp.jl")
 include("ModPCs/Modifyer.jl")
 include("ModPCs/ModPC.jl")
