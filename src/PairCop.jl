@@ -35,6 +35,14 @@ function pdf(cop::PairCop, u1::Float64, u2::Float64)
     return pdf(cop, [u1], [u2])
 end
 
+function pdf(cop::PairCop, u1::Float64, u2::FloatVec)
+    return pdf(cop, u1*ones(length(u2)), u2)
+end
+
+function pdf(cop::PairCop, u1::FloatVec, u2::Float64)
+    return pdf(cop, u1, u2*ones(length(u1)))
+end
+
 ##################
 ## cdf function ##
 ##################
@@ -130,3 +138,48 @@ function vinv(cop::PairCop, u2::Float64, u1::Float64)
     return vinv(cop, [u2], [u1])
 end
 
+################################
+## handle single observations ##
+################################
+
+funcs = [:pdf,
+         :cdf,
+         :hfun,
+         :vfun,
+         :hinv,
+         :vinv]
+
+macro treatSingleObs(f)
+    esc(quote
+        function $(f)(cop::PairCop, u1::Float64, u2::Float64)
+            return $(f)(cop, [u1], [u2])
+        end
+        function $(f)(cop::PairCop, u1::Float64, u2::FloatVec)
+            return $(f)(cop, u1*ones(length(u2)), u2)
+        end
+        function $(f)(cop::PairCop, u1::FloatVec, u2::Float64)
+            return $(f)(cop, u1, u2*ones(length(u1)))
+        end
+    end)
+end
+
+
+## macro treatSingleObs(f)
+##     function f(cop::PairCop, u1::Float64, u2::Float64)
+##         return f(cop, [u1], [u2])
+##     end
+##     function f(cop::PairCop, u1::Float64, u2::FloatVec)
+##         return f(cop, u1*ones(length(u2)), u2)
+##     end
+##     function f(cop::PairCop, u1::FloatVec, u2::Float64)
+##         return f(cop, u1, u2*ones(length(u1)))
+##     end
+## end
+
+for f in funcs
+        eval(macroexpand(:(@treatSingleObs($f))))
+end
+## for f in funcs
+##     ## eval(macroexpand(@treatSingleObs f))
+##     eval(macroexpand(@treatSingleObs($f)))
+## end
