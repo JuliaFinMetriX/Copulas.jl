@@ -114,54 +114,35 @@ for ptInd=1:length(testPoints)
 end
 
 
-#################################
-## h- and v-functions, inverse ##
-#################################
+########################
+## consistency checks ##
+########################
 
-epsTol = 1e-10
+epsTol = 1e-7
 
-## single test
-##------------
-
-cop = Copulas.BB6PC_Cpp([1.3, 4.3])
-u1, u2 = 0.2, 0.9
-
-q = Copulas.hfun(cop, u1, u2)
-u1_hat = Copulas.hinv(cop, q, [u2])
-@test_approx_eq_eps u1 u1_hat epsTol
-
-q = Copulas.hinv(cop, u1, u2)
-u1_hat = Copulas.hfun(cop, q, [u2])
-@test_approx_eq_eps u1 u1_hat epsTol
-
-q = Copulas.vfun(cop, u2, u1)
-u2_hat = Copulas.vinv(cop, q, [u1])
-@test_approx_eq_eps u2 u2_hat epsTol
-
-q = Copulas.vinv(cop, u2, u1)
-u2_hat = Copulas.vfun(cop, q, [u1])
-@test_approx_eq_eps u2 u2_hat epsTol
-
+uLow = 0.001
+uHigh = 0.999
+testGrid = [uLow, 0.1:0.1:0.9, uHigh]
 
 cops = [
         Copulas.IndepPC_Cpp([0.3]),
         Copulas.IndepPC_Cpp([0.3]),
         Copulas.AMHPC_Cpp([0.4]),
         Copulas.AMHPC_Cpp([-0.4]),
-        ## Copulas.AsymFGMPC_Cpp([0.2]),
-        ## Copulas.AsymFGMPC_Cpp([0.9]),
-        ## Copulas.BB1PC_Cpp([0.2, 5.4]),
-        ## Copulas.BB1PC_Cpp([5.4, 1.2]),
+        Copulas.AsymFGMPC_Cpp([0.2]),
+        Copulas.AsymFGMPC_Cpp([0.9]),
+        Copulas.BB1PC_Cpp([0.2, 5.4]),
+        Copulas.BB1PC_Cpp([5.4, 1.2]),
         ## Copulas.BB6PC_Cpp([1.3, 4.3]),
         ## Copulas.BB6PC_Cpp([5.4, 0.2]),
-        ## Copulas.BB7PC_Cpp([4.5, 4.4]),
-        ## Copulas.BB7PC_Cpp([1.5, 4.2]),
-        ## Copulas.BB8PC_Cpp([1.2, 0.2]),
-        ## Copulas.BB8PC_Cpp([4.5, 0.8]),
+        Copulas.BB7PC_Cpp([4.5, 4.4]),
+        Copulas.BB7PC_Cpp([1.5, 4.2]),
+        Copulas.BB8PC_Cpp([1.2, 0.2]),
+        Copulas.BB8PC_Cpp([4.5, 0.8]),
         Copulas.ClaytonPC_Cpp([4.3]),
         Copulas.ClaytonPC_Cpp([2]),
-        Copulas.FGMPC_Cpp([0.4]),
-        Copulas.FGMPC_Cpp([-0.7]),
+        ## Copulas.FGMPC_Cpp([0.4]),
+        ## Copulas.FGMPC_Cpp([-0.7]),
         ## Copulas.FrankPC_Cpp([-20]),
         ## Copulas.FrankPC_Cpp([22]),
         Copulas.GaussianPC_Cpp([0.6]),
@@ -182,10 +163,27 @@ cops = [
         Copulas.Tawn2PC_Cpp([1.2, 0.4 ]),
         Copulas.TawnPC_Cpp([4.4, 0.3, 0.8]),
         Copulas.TawnPC_Cpp([12.8, 0.4, 0.5]),
-        Copulas.tPC_Cpp([0.5, 4.3]),
-        Copulas.tPC_Cpp([-0.3, 1.2])
+        Copulas.tPC_Cpp([0.5, 4.0]),
+        Copulas.tPC_Cpp([-0.3, 8.0])
         ]
 
+
+## pdf, cdf, h- and v-functions
+##-----------------------------
+
+for cop in cops
+    show(cop)
+    println("")
+    println(" *  cdf tests:")
+    Copulas.testCdf(cop, epsTol, testGrid)
+    println(" *  h/v tests:")
+    Copulas.testHandV(cop, epsTol, testGrid)
+    println(" *  pdf tests:")
+    Copulas.testPdf(cop, testGrid)
+end
+
+## inverse h- and v-functions
+##---------------------------
 
 testPoints = [(0.3, 0.7),
               (0.00002, 0.00098),

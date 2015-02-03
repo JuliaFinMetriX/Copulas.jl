@@ -1,5 +1,7 @@
 module Copulas
 
+using Base.Test
+
 typealias FloatVec Array{Float64, 1}
 
 # package code goes here

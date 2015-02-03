@@ -1,7 +1,7 @@
-type AsymFGM <: ParamPC
+type AsymFGMPC <: ParamPC
     θ::Float64
 
-    function AsymFGM(θ::Float64)
+    function AsymFGMPC(θ::Float64)
         if (θ <= 0) | (θ >= 1)
             error("θ parameter must be between 0 and 1")
         end
@@ -10,7 +10,7 @@ type AsymFGM <: ParamPC
 
 end
 
-function params(cop::AsymFGM)
+function params(cop::AsymFGMPC)
     return (cop.θ,)
 end
 
@@ -18,29 +18,32 @@ end
 ## copula functions ##
 ######################
 
-function cdf(cop::AsymFGM, u1::FloatVec, u2::FloatVec)
+function cdf(cop::AsymFGMPC, u1::FloatVec, u2::FloatVec)
     θ = params(cop)[1]
-    val = u1.*u2 + θ*u1.*u2.*(1 - u1 - u2 - u1.*u2).*u2.*(1 - u1)
+    val = u1.*u2 + θ*u1.*u2.*(1 - u1 - u2 + u1.*u2).*u2.*(1 - u1)
     return val
 end
 
-function pdf(cop::AsymFGM, u1::FloatVec, u2::FloatVec)
+function pdf(cop::AsymFGMPC, u1::FloatVec, u2::FloatVec)
     θ = params(cop)[1]
-    val = θ*(u1.^2.*(9*u2.^2 + 6*u2) + (2 - 8*u1).*u2 - 3*u2.^2) + 1
+    val = u1.*(θ*u1.*(6 - 9u2).*u2 + θ*(12u2 - 8).*u2) +
+    	θ*(2 - 3u2).*u2 + 1
     return val
 end
 
-function hfun(cop::AsymFGM, u1::FloatVec, u2::FloatVec)
+function hfun(cop::AsymFGMPC, u1::FloatVec, u2::FloatVec)
     θ = params(cop)[1]
-    val = 3*θ*u1.^3.*u2.^2 + 2*θ*u1.^3.*u2 - 4*θ*u1.^2.*u2 -
-    3*θ*u1.*u2.^2 + 2*θ*u1.*u2 + u1
+    val = -3θ*u1.^3.*u2.^2 + 2θ*u1.^3.*u2 +
+         6θ*u1.^2.*u2.^2 - 4θ*u1.^2.*u2 -
+         3θ*u1.*u2.^2 + 2θ*u1.*u2 + u1
     return val
 end
 
-function vfun(cop::AsymFGM, u2::FloatVec, u1::FloatVec)
+function vfun(cop::AsymFGMPC, u2::FloatVec, u1::FloatVec)
     θ = params(cop)[1]
-    val = 3*θ*u1.^2.*u2.^3 + 3*θ*u1.^2.*u2.^2 - 4*θ*u1.*u2.^2 - θ*u2.^3 +
-    θ*u2.^2 + u2
+
+    val = -3θ*u1.^2.*u2.^3 + 3θ*u1.^2.*u2.^2 + 4θ*u1.*u2.^3 -
+         4θ*u1.*u2.^2 - θ*u2.^3 + θ*u2.^2 + u2
     return val
 end
 
