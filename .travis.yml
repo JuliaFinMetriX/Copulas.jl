@@ -8,6 +8,11 @@ julia:
 notifications:
   email: false
 # uncomment the following lines to override the default test script
+before_install:
+  - sudo apt-get -y install libboost-all-dev
+#  - sudo apt-get -y install libnlopt0
+  - sudo apt-get -y install libgomp1
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
+  - julia -e 'Pkg.add("NLopt")'
   - julia --check-bounds=yes -e 'Pkg.clone(pwd()); Pkg.build("Copulas"); Pkg.test("Copulas"; coverage=true)'
