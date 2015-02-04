@@ -73,7 +73,9 @@ include("ModPCs/ModPC.jl")
 include("ModPCs/rotations.jl")
 include("ModPCs/ccwRotations.jl")
 include("MixPCs/MixPC.jl")
+include("testFuncs.jl")
 include("rand.jl")
+
 @require Winston begin
     filePath = joinpath(Pkg.dir("Copulas"), "src", "wstPlotting.jl")
     include(filePath)
