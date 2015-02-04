@@ -9,10 +9,17 @@ notifications:
   email: false
 # uncomment the following lines to override the default test script
 before_install:
+  - OLD_DIR=$PWD
+  - mkdir -p $HOME/programs
+  - wget http://ab-initio.mit.edu/nlopt/nlopt-2.4.1.tar.gz -O $HOME/programs/nlopt-2.4.1.tar.gz
+  - cd $HOME/programs/
+  - tar xvfz $HOME/programs/nlopt-2.4.1.tar.gz
+  - cd $HOME/programs/nlopt-2.4.1 && ./configure && make && sudo make install
   - sudo apt-get -y install libboost-all-dev
-#  - sudo apt-get -y install libnlopt0
   - sudo apt-get -y install libgomp1
+  - sudo apt-get -y install gfortran
+  - cd $OLD_DIR
+  
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia -e 'Pkg.add("NLopt")'
   - julia --check-bounds=yes -e 'Pkg.clone(pwd()); Pkg.build("Copulas"); Pkg.test("Copulas"; coverage=true)'
