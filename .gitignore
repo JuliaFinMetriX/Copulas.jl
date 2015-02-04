@@ -19,3 +19,6 @@
 /.sass-cache/
 /UnitTests/
 /_site/
+/src/wstPlotting.jl~
+/src/plotting.jl~
+/NO_GIT/
