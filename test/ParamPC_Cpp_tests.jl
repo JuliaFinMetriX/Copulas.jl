@@ -194,38 +194,80 @@ testPoints = [(0.3, 0.7),
               (0.999, 0.999),
               (0.0001, 0.0001)]
 
+println("-------------------------------")
+println("inverse h- and v-function tests")
+println("-------------------------------")
+
 for pts in testPoints
     u1, u2 = pts
-    println("-----------------")
-    println("u1: $u1, u2: $u2")
-    println("-----------------")
     for cop in cops
+        copShown = false
+
         q = Copulas.hfun(cop, u1, u2)
         u1_hat = Copulas.hinv(cop, q, [u2])
-        hdiff1 = u1 - u1_hat
-        q = Copulas.hinv(cop, u1, u2)
-        u1_hat = Copulas.hfun(cop, q, [u2])
-        hdiff2 = u1 - u1_hat
-        ## @test_approx_eq_eps u1 u1_hat epsTol
-        q = Copulas.vfun(cop, u2, u1)
-        u2_hat = Copulas.vinv(cop, q, [u1])
-        vdiff1 = u2 - u2_hat
-        q = Copulas.vfun(cop, u2, u1)
-        u2_hat = Copulas.vinv(cop, q, [u1])
-        vdiff2 = u2 - u2_hat
-        ## @test_approx_eq_eps u2 u2_hat epsTol
-        maxDiff = max(abs(hdiff1[1]),
-                      abs(hdiff2[1]),
-                      abs(vdiff1[1]),
-                      abs(vdiff2[1]))
-        if abs(maxDiff) > 1e-10
-            show(cop)
-            println("")
-            println("diffh1: $hdiff1")
-            println("diffh2: $hdiff2")
-            println("diffv1: $vdiff1")
-            println("diffv2: $vdiff2")
+        if abs(u1 - u1_hat)[1] > epsTol
+            # show copula
+            if !copShown
+                show(cop)
+                println("")
+                copShown = true
+            end
+            
+            # at least both values should be mapped to same hfun value
+            println("u2=$u2: $u1 -> $u1_hat")
+            if !(q == Copulas.hfun(cop, u1_hat, u2))
+                println("different h-function values")
+                h1 = Copulas.hfun(cop, u1, u2)
+                h2 = Copulas.hfun(cop, u1_hat, u2)
+                println("  h($u1) = $h1")
+                println("  h($u1_hat) = $h2")
+            end
         end
+
+        q = Copulas.vfun(cop, u1, u2)
+        u1_hat = Copulas.vinv(cop, q, [u2])
+        if abs(u1 - u1_hat)[1] > epsTol
+            # show copula
+            if !copShown
+                show(cop)
+                println("")
+                copShown = true
+            end
+            
+            # at least both values should be mapped to same hfun value
+            println("u2=$u2: $u1 -> $u1_hat")
+            if !(q == Copulas.vfun(cop, u1_hat, u2))
+                println("different v-function values")
+                h1 = Copulas.vfun(cop, u1, u2)
+                h2 = Copulas.vfun(cop, u1_hat, u2)
+                println("  v($u1) = $h1")
+                println("  v($u1_hat) = $h2")
+            end
+        end
+
+        ## q = Copulas.hinv(cop, u1, u2)
+        ## u1_hat = Copulas.hfun(cop, q, [u2])
+        ## hdiff2 = u1 - u1_hat
+        ## ## @test_approx_eq_eps u1 u1_hat epsTol
+        ## q = Copulas.vfun(cop, u2, u1)
+        ## u2_hat = Copulas.vinv(cop, q, [u1])
+        ## vdiff1 = u2 - u2_hat
+        ## q = Copulas.vfun(cop, u2, u1)
+        ## u2_hat = Copulas.vinv(cop, q, [u1])
+        ## vdiff2 = u2 - u2_hat
+        ## ## @test_approx_eq_eps u2 u2_hat epsTol
+        ## maxDiff = max(abs(hdiff1[1]),
+        ##               abs(hdiff2[1]),
+        ##               abs(vdiff1[1]),
+        ##               abs(vdiff2[1]))
+        ## if abs(maxDiff) > 1e-10
+        ##     show(cop)
+        ##     println("")
+        ##     println("diffh1: $hdiff1")
+        ##     println("diffh2: $hdiff2")
+        ##     println("diffv1: $vdiff1")
+        ##     println("diffv2: $vdiff2")
+        ## end
     end
 end
 
