@@ -2,7 +2,7 @@ module Copulas
 
 using Base.Test
 ## using Plotly
-## using Requires
+using Requires
 
 typealias FloatVec Array{Float64, 1}
 
@@ -57,11 +57,17 @@ Tawn2PC_Cpp,
 TawnPC_Cpp,
 tPC_Cpp,
 # functions
+cdf,
 checkSameLength,
 getVineCPPId,
 getCopNam,
 getCopType,
-params
+hfun,
+hinv,
+params,
+pdf,
+vfun,
+vinv
 
 include("PairCop.jl")
 include("utils.jl")
@@ -76,12 +82,12 @@ include("MixPCs/MixPC.jl")
 include("testFuncs.jl")
 include("rand.jl")
 
-## @require Winston begin
-##     filePath = joinpath(Pkg.dir("Copulas"), "src", "wstPlotting.jl")
-##     include(filePath)
-##     println("\n-------------------")
-##     println("Winston copula plots loaded as well")
-##     println("-------------------")
-## end
+@require Winston begin
+    filePath = joinpath(Pkg.dir("Copulas"), "src", "wstPlotting.jl")
+    include(filePath)
+    println("\n-------------------")
+    println("Winston copula plots loaded as well")
+    println("-------------------")
+end
 
 end # module

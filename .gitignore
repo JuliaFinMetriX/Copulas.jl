@@ -24,3 +24,5 @@
 /NO_GIT/
 /src/testFuncs.jl~
 /deps/build.jl~
+/.ipynb_checkpoints/
+/.juliahistory
