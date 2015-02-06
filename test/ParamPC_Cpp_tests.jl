@@ -134,7 +134,7 @@ cops = [
         Copulas.BB1PC_Cpp([0.2, 5.4]),
         Copulas.BB1PC_Cpp([5.4, 1.2]),
         Copulas.BB6PC_Cpp([1.3, 4.3]),
-        Copulas.BB6PC_Cpp([5.4, 0.2]),
+        ## Copulas.BB6PC_Cpp([5.4, 0.2]),
         Copulas.BB7PC_Cpp([4.5, 4.4]),
         Copulas.BB7PC_Cpp([1.5, 4.2]),
         Copulas.BB8PC_Cpp([1.2, 0.2]),
@@ -194,39 +194,39 @@ testPoints = [(0.3, 0.7),
               (0.999, 0.999),
               (0.0001, 0.0001)]
 
-## for pts in testPoints
-##     u1, u2 = pts
-##     println("-----------------")
-##     println("u1: $u1, u2: $u2")
-##     println("-----------------")
-##     for cop in cops
-##         q = Copulas.hfun(cop, u1, u2)
-##         u1_hat = Copulas.hinv(cop, q, [u2])
-##         hdiff1 = u1 - u1_hat
-##         q = Copulas.hinv(cop, u1, u2)
-##         u1_hat = Copulas.hfun(cop, q, [u2])
-##         hdiff2 = u1 - u1_hat
-##         ## @test_approx_eq_eps u1 u1_hat epsTol
-##         q = Copulas.vfun(cop, u2, u1)
-##         u2_hat = Copulas.vinv(cop, q, [u1])
-##         vdiff1 = u2 - u2_hat
-##         q = Copulas.vfun(cop, u2, u1)
-##         u2_hat = Copulas.vinv(cop, q, [u1])
-##         vdiff2 = u2 - u2_hat
-##         ## @test_approx_eq_eps u2 u2_hat epsTol
-##         maxDiff = max(abs(hdiff1[1]),
-##                       abs(hdiff2[1]),
-##                       abs(vdiff1[1]),
-##                       abs(vdiff2[1]))
-##         if abs(maxDiff) > 1e-10
-##             show(cop)
-##             println("")
-##             println("diffh1: $hdiff1")
-##             println("diffh2: $hdiff2")
-##             println("diffv1: $vdiff1")
-##             println("diffv2: $vdiff2")
-##         end
-##     end
-## end
+for pts in testPoints
+    u1, u2 = pts
+    println("-----------------")
+    println("u1: $u1, u2: $u2")
+    println("-----------------")
+    for cop in cops
+        q = Copulas.hfun(cop, u1, u2)
+        u1_hat = Copulas.hinv(cop, q, [u2])
+        hdiff1 = u1 - u1_hat
+        q = Copulas.hinv(cop, u1, u2)
+        u1_hat = Copulas.hfun(cop, q, [u2])
+        hdiff2 = u1 - u1_hat
+        ## @test_approx_eq_eps u1 u1_hat epsTol
+        q = Copulas.vfun(cop, u2, u1)
+        u2_hat = Copulas.vinv(cop, q, [u1])
+        vdiff1 = u2 - u2_hat
+        q = Copulas.vfun(cop, u2, u1)
+        u2_hat = Copulas.vinv(cop, q, [u1])
+        vdiff2 = u2 - u2_hat
+        ## @test_approx_eq_eps u2 u2_hat epsTol
+        maxDiff = max(abs(hdiff1[1]),
+                      abs(hdiff2[1]),
+                      abs(vdiff1[1]),
+                      abs(vdiff2[1]))
+        if abs(maxDiff) > 1e-10
+            show(cop)
+            println("")
+            println("diffh1: $hdiff1")
+            println("diffh2: $hdiff2")
+            println("diffv1: $vdiff1")
+            println("diffv2: $vdiff2")
+        end
+    end
+end
 
 end
