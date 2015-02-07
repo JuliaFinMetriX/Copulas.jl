@@ -23,33 +23,6 @@ function tName(func, cop, copInd, ptInd)
     return string(func, "_", cop, "_", copInd, "_", ptInd)
 end
 
-## single function tests
-##----------------------
-
-cop = Copulas.ClaytonPC_Cpp([4.1])
-
-u1, u2 = (0.3, 0.4)
-
-testName = tName("pdf", "clay", 1, 1)
-val = Copulas.pdf(cop, u1, u2)
-expOut = resDict[testName]
-@test_approx_eq_eps val expOut epsTol
-
-testName = tName("cdf", "clay", 1, 1)
-val = Copulas.cdf(cop, u1, u2)
-expOut = resDict[testName]
-@test_approx_eq_eps val expOut epsTol
-
-testName = tName("hfun", "clay", 1, 1)
-val = Copulas.hfun(cop, u1, u2)
-expOut = resDict[testName]
-@test_approx_eq_eps val expOut epsTol
-
-testName = tName("vfun", "clay", 1, 1)
-val = Copulas.vfun(cop, u2, u1)
-expOut = resDict[testName]
-@test_approx_eq_eps val expOut epsTol
-
 ## tests using metaprogramming
 ##----------------------------
 
@@ -60,26 +33,7 @@ funcs = [:pdf,
          :cdf,
          :hfun]
 
-cops = ["gauss" Copulas.GaussianPC_Cpp([0.5]);
-        "gauss" Copulas.GaussianPC_Cpp([-0.5]);
-        "stud" Copulas.tPC_Cpp([0.5, 4.0]);
-        "stud" Copulas.tPC_Cpp([-0.5, 5.0]);
-        "clay" Copulas.ClaytonPC_Cpp([4.1]);
-        "clay" Copulas.ClaytonPC_Cpp([6.3]);
-        "gumb" Copulas.GumbelPC_Cpp([4.3]);
-        "gumb" Copulas.GumbelPC_Cpp([1.2]);
-        "frank" Copulas.FrankPC_Cpp([4.3]);
-        "frank" Copulas.FrankPC_Cpp([1.2]);
-        "joe" Copulas.JoePC_Cpp([4.3]);
-        "joe" Copulas.JoePC_Cpp([1.2]);
-        "bb1" Copulas.BB1PC_Cpp([0.3, 2.2]);
-        "bb1" Copulas.BB1PC_Cpp([1.2, 2.8]);
-        "bb6" Copulas.BB6PC_Cpp([4.3, 2.2]);
-        "bb6" Copulas.BB6PC_Cpp([1.2, 1.1]);
-        "bb7" Copulas.BB7PC_Cpp([1.9, 0.3]);
-        "bb7" Copulas.BB7PC_Cpp([1.2, 8.2]);
-        "bb8" Copulas.BB8PC_Cpp([4.3, 0.2]);
-        "bb8" Copulas.BB8PC_Cpp([1.2, 0.4])]
+cops = []
         
 
 for ptInd=1:length(testPoints)
@@ -125,46 +79,8 @@ uHigh = 0.999
 testGrid = [uLow, 0.1:0.1:0.9, uHigh]
 
 cops = [
-        Copulas.IndepPC_Cpp([0.3]),
-        Copulas.IndepPC_Cpp([0.3]),
-        Copulas.AMHPC_Cpp([0.4]),
-        Copulas.AMHPC_Cpp([-0.4]),
-        Copulas.AsymFGMPC_Cpp([0.2]),
-        Copulas.AsymFGMPC_Cpp([0.9]),
-        Copulas.BB1PC_Cpp([0.2, 5.4]),
-        Copulas.BB1PC_Cpp([5.4, 1.2]),
-        Copulas.BB6PC_Cpp([1.3, 4.3]),
-        ## Copulas.BB6PC_Cpp([5.4, 0.2]),
-        Copulas.BB7PC_Cpp([4.5, 4.4]),
-        Copulas.BB7PC_Cpp([1.5, 4.2]),
-        Copulas.BB8PC_Cpp([1.2, 0.2]),
-        Copulas.BB8PC_Cpp([4.5, 0.8]),
-        Copulas.ClaytonPC_Cpp([4.3]),
-        Copulas.ClaytonPC_Cpp([2]),
-        Copulas.FGMPC_Cpp([0.4]),
-        Copulas.FGMPC_Cpp([-0.7]),
-        Copulas.FrankPC_Cpp([-20]),
-        Copulas.FrankPC_Cpp([22]),
-        Copulas.GaussianPC_Cpp([0.6]),
-        Copulas.GaussianPC_Cpp([-0.2]),
-        Copulas.GumbelPC_Cpp([1.2]),
-        Copulas.GumbelPC_Cpp([4.3]),
-        Copulas.IteratedFGMPC_Cpp([0.5, 0.5]),
-        Copulas.IteratedFGMPC_Cpp([-0.5, -0.4]),
-        Copulas.JoePC_Cpp([4.2]),
-        Copulas.JoePC_Cpp([8]),
-        Copulas.PartialFrankPC_Cpp([1.2]),
-        Copulas.PartialFrankPC_Cpp([12.5]),
-        Copulas.PlackettPC_Cpp([1.2]),
-        Copulas.PlackettPC_Cpp([18]),
-        Copulas.Tawn1PC_Cpp([1.2, 0.2]),
-        Copulas.Tawn1PC_Cpp([4.3, 0.4]),
-        Copulas.Tawn2PC_Cpp([5.2, 0.8]),
-        Copulas.Tawn2PC_Cpp([1.2, 0.4 ]),
-        Copulas.TawnPC_Cpp([4.4, 0.3, 0.8]),
-        Copulas.TawnPC_Cpp([12.8, 0.4, 0.5]),
-        Copulas.tPC_Cpp([0.5, 4.0]),
-        Copulas.tPC_Cpp([-0.3, 8.0])
+        Copulas.AsymFGMPC(0.2),
+        Copulas.AsymFGMPC(0.9)
         ]
 
 
@@ -184,6 +100,9 @@ end
 
 ## inverse h- and v-functions
 ##---------------------------
+
+cops = []
+
 
 testPoints = [(0.3, 0.7),
               (0.00002, 0.00098),
@@ -271,14 +190,19 @@ for pts in testPoints
     end
 end
 
-## ID functions
-##-------------
+######################
+## parameter bounds ##
+######################
 
-cop = Copulas.GaussianPC_Cpp([0.5])
-@test 10 == Copulas.getVineCppId(cop)
+@test_throws Exception Copulas.AsymFGMPC(4.3)
+@test_throws Exception Copulas.ClaytonPC(-4.)
 
-@test :Gumbel == Copulas.getCopNam(11)
 
-@test :IteratedFGMPC_Cpp == Copulas.getCopType_Cpp(12)
+## params function
+##----------------
+
+@test (0.8,) == Copulas.params(Copulas.AsymFGMPC(0.8))
+@test (4.3,) == Copulas.params(Copulas.ClaytonPC(4.3))
 
 end
+

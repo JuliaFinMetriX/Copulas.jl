@@ -2,6 +2,8 @@ using Copulas
 using Base.Test
 
 tests = ["utils_test.jl",
+         "paircop_test.jl",
+         "ParamPC_tests.jl",
          "ParamPC_Cpp_tests.jl"
          ## "ParamPC_test.jl"
          ]
