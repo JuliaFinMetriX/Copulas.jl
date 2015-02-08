@@ -8,6 +8,17 @@ Documentation
 Type hierarchy
 --------------
 
+![Type hierarchy](pics/cop_type_hierarchy.svg)
+
+Pair copula construction types
+-------------------------------
+
+![PCC](pics/vine_types.svg)
+
+
+Pair copula type hierarchy
+--------------------------
+
 ![Type hierarchy](pics/type_graph.svg)
 
 Copula modifications
