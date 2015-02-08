@@ -1,3 +1,5 @@
+*~
+*.jl~
 *.jl.cov
 *.jl.mem
 /src/ParamPC.jl~
@@ -26,3 +28,6 @@
 /deps/build.jl~
 /.ipynb_checkpoints/
 /.juliahistory
+/src/PCC/Vines/Vines.jl~
+/src/PCC/Vines/utils.jl~
+/src/PCC/Vines/vineConstruction.jl~

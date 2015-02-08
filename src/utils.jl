@@ -5,6 +5,7 @@ function checkSameLength(u1::FloatVec, u2::FloatVec)
     return true
 end
 
+@doc "get family and parameter of copula instance" ->
 function getFamAndParams(cop::ParamPC_Cpp)
     return (float(getVineCppId(cop)), params(cop))
 end
@@ -23,6 +24,10 @@ end
 ## triangular indexing
 ##--------------------
 
+@doc """
+transform single index of array to double index of upper triangular
+matrix
+""" ->
 function arr2triangular(nVars::Int64, ind::Int64)
     # indices are running column-wise
     elemsInRow = [(nVars-1):-1:1]

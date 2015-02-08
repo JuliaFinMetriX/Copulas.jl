@@ -40,6 +40,12 @@ tP = Copulas.Tree(5, paths)
 @test tP == tP1
 @test tP.paths[3] == [2, 1]
 
+## display functions
+##------------------
+
+Copulas.display(tP1)
+Copulas.display([tP1, tP1])
+
 ## length
 ##-------
 

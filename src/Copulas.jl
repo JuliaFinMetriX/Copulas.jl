@@ -4,6 +4,8 @@ using Base.Test
 ## using Plotly
 using Requires
 
+VERSION < v"0.4-" && using Docile
+
 typealias FloatVec Array{Float64, 1}
 typealias IntArrays Array{Array{Int, 1}, 1}
 
