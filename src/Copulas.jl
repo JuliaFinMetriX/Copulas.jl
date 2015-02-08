@@ -6,6 +6,19 @@ using Requires
 
 typealias FloatVec Array{Float64, 1}
 
+####################
+## type hierarchy ##
+####################
+
+abstract Copula
+abstract PairCop <: Copula
+
+# parametric pair copulas
+abstract AbstractParamPC <: PairCop
+abstract ParamPC <: AbstractParamPC # native Julia
+abstract ParamPC_Cpp <: AbstractParamPC # VineCopulaCPP
+
+
 # package code goes here
 export # copula types
 PairCop,

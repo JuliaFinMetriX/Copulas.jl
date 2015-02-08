@@ -276,6 +276,8 @@ end
 
 cop = Copulas.GaussianPC_Cpp([0.5])
 @test 10 == Copulas.getVineCppId(cop)
+@test 2 == Copulas.getVineCppId(:AsymFGM)
+@test 0 == Copulas.getVineCppId(:Indep)
 
 @test :Gumbel == Copulas.getCopNam(11)
 

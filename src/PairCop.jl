@@ -1,20 +1,3 @@
-####################
-## type hierarchy ##
-####################
-
-## abstract PairCop
-abstract PairCop
-
-## parametric copula types
-##------------------------
-
-abstract AbstractParamPC <: PairCop
-
-## native julia implementation
-abstract ParamPC <: AbstractParamPC
-
-## based on VineCopulaCPP
-abstract ParamPC_Cpp <: AbstractParamPC
 
 ##################################
 ## capture un-implemented cases ##
