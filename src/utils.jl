@@ -20,3 +20,24 @@ function params(cop::ParamPC_Cpp)
     return cop.params
 end
 
+## triangular indexing
+##--------------------
+
+function arr2triangular(nVars::Int64, ind::Int64)
+    # indices are running column-wise
+    elemsInRow = [(nVars-1):-1:1]
+    lastInColumn = cumsum(elemsInRow)
+    rowInd = findfirst(ind .< lastInColumn)
+    nInRow = ind - lastInColumn[rowInd-1]
+    colInd = rowInd + nInRow
+    return (rowInd, colInd)
+end
+
+function triangular2arr(nVars::Int64, rowInd::Int64, colInd::Int64)
+    if !(rowInd < colInd <= nVars)
+        error("column index must be larger than row index")
+    end
+    elemsInRow = [(nVars-1):-1:1]
+    fullRows = sum(elemsInRow[1:(rowInd - 1)])
+    return fullRows + (colInd - rowInd)
+end
