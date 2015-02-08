@@ -5,6 +5,7 @@ using Base.Test
 using Requires
 
 typealias FloatVec Array{Float64, 1}
+typealias IntArrays Array{Array{Int, 1}, 1}
 
 ####################
 ## type hierarchy ##
@@ -70,6 +71,15 @@ Tawn2PC_Cpp,
 TawnPC_Cpp,
 tPC_Cpp,
 # functions
+Tree,
+Vine,
+allPathVals,
+allVals,
+condSetChk,
+par2tree,
+tree2par,
+trees2vine,
+vine2trees,
 cdf,
 checkSameLength,
 getVineCPPId,
@@ -92,6 +102,12 @@ include("ModPCs/ModPC.jl")
 include("ModPCs/rotations.jl")
 include("ModPCs/ccwRotations.jl")
 include("MixPCs/MixPC.jl")
+include("PCC/Vines/tree.jl")
+include("PCC/Vines/edge.jl")
+include("PCC/Vines/tree.jl")
+include("PCC/Vines/vine.jl")
+include("PCC/Vines/utils.jl")
+include("PCC/Vines/vineConstruction.jl")
 include("testFuncs.jl")
 include("rand.jl")
 
