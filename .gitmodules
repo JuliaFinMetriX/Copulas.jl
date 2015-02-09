@@ -1,3 +1,3 @@
 [submodule "src/VineCopulaCPP"]
 	path = src/VineCopulaCPP
-	url = https://github.com/cgroll/VineCopulaCPP.git
+	url = https://github.com/MalteKurz/VineCopulaCPP.git
