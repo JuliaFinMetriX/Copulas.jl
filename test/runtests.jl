@@ -5,6 +5,7 @@ tests = ["utils_test.jl",
          "paircop_test.jl",
          "tree_test.jl",
          "vine_test.jl",
+         "pcc_test.jl",
          "vineConstruction_test.jl",
          "ParamPC_tests.jl",
          "ParamPC_Cpp_tests.jl"

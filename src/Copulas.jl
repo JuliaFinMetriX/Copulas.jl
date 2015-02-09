@@ -14,7 +14,9 @@ typealias IntArrays Array{Array{Int, 1}, 1}
 ####################
 
 abstract Copula
-abstract PairCop <: Copula
+abstract PccCop <: Copula
+abstract PairCop <: PccCop
+abstract VarPairCop <: PccCop
 
 # parametric pair copulas
 abstract AbstractParamPC <: PairCop
@@ -110,7 +112,9 @@ include("PCC/Vines/tree.jl")
 include("PCC/Vines/vine.jl")
 include("PCC/Vines/utils.jl")
 include("PCC/Vines/vineConstruction.jl")
+include("PCC/PCC.jl")
 include("testFuncs.jl")
+include("testcases.jl")
 include("rand.jl")
 
 @require Winston begin

@@ -101,6 +101,42 @@ function getCopType_Cpp(ii::Int)
     return copTypeNames_Cpp[ii+1]
 end
 
+#############
+## display ##
+#############
+
+function displayShortString(cop::ParamPC_Cpp)
+    copNam = string(typeof(cop))
+    par = params(cop)
+    nParams = length(par)
+    paramsString = string(par[1])
+    for ii=2:nParams
+        paramsString = join([paramsString, ", ", string(par[ii])])
+    end
+    return join([copNam, ": ", paramsString])
+end
+
+function displayShortString(cop::IndepPC_Cpp)
+    return "IndepPC_Cpp"
+end
+
+import Base.Multimedia.display
+function display(cop::ParamPC_Cpp)
+    msg = displayShortString(cop)
+    println("$msg")
+end
+    
+##############
+## equality ##
+##############
+
+import Base.==
+function ==(cop1::ParamPC_Cpp, cop2::ParamPC_Cpp)
+    isequal(typeof(cop1), typeof(cop2)) || return false
+    return isequal(params(cop1), params(cop2))
+end
+    
+
 #######################
 ## VineCpp functions ##
 #######################

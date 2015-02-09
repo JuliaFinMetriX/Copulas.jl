@@ -28,17 +28,33 @@ end
 transform single index of array to double index of upper triangular
 matrix
 """ ->
-function arr2triangular(nVars::Int64, ind::Int64)
+function triang2sub(nVars::Int64, ind::Int64)
     # indices are running column-wise
     elemsInRow = [(nVars-1):-1:1]
     lastInColumn = cumsum(elemsInRow)
-    rowInd = findfirst(ind .< lastInColumn)
-    nInRow = ind - lastInColumn[rowInd-1]
-    colInd = rowInd + nInRow
+    rowInd = findfirst(ind .<= lastInColumn)
+    if rowInd == 1
+        colInd = ind + 1
+    else
+        nInRow = ind - lastInColumn[rowInd-1]
+        colInd = rowInd + nInRow
+    end
     return (rowInd, colInd)
 end
 
-function triangular2arr(nVars::Int64, rowInd::Int64, colInd::Int64)
+function triang2sub(nVars::Int64, inds::Array{Int, 1})
+    nInds = length(inds)
+    rowInds = zeros(Int, nInds)
+    colInds = zeros(Int, nInds)
+    for ii=1:nInds
+        rowInd, colInd = triang2sub(nVars, inds[ii])
+        rowInds[ii] = rowInd
+        colInds[ii] = colInd
+    end
+    return rowInds, colInds
+end
+
+function sub2triang(nVars::Int64, rowInd::Int64, colInd::Int64)
     if !(rowInd < colInd <= nVars)
         error("column index must be larger than row index")
     end

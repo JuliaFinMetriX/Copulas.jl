@@ -9,6 +9,12 @@ using Base.Test
 Copulas.Vine([0 2; 1 0])
 Copulas.Vine([0 2; 1 0], ["var1", "var2"])
 Copulas.Vine([0 2; 1 0], [:var1, :var2])
+@test_throws Exception Copulas.Vine([0 2; 1 0; 3 3])
+
+## display functions
+##------------------
+
+display(Copulas.Vine([0 2; 1 0]))
 
 ##########################
 ## conversion functions ##

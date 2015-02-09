@@ -283,4 +283,22 @@ cop = Copulas.GaussianPC_Cpp([0.5])
 
 @test :IteratedFGMPC_Cpp == Copulas.getCopType_Cpp(12)
 
+## display functions
+##------------------
+
+cop = Copulas.GaussianPC_Cpp([0.5])
+@test "GaussianPC_Cpp: 0.5" == Copulas.displayShortString(cop)
+
+cop = Copulas.tPC_Cpp([0.5, 12.])
+@test "tPC_Cpp: 0.5, 12.0" == Copulas.displayShortString(cop)
+
+display(cop)
+
+## equality
+##---------
+
+cop1 = Copulas.GaussianPC_Cpp([0.5])
+cop2 = Copulas.GaussianPC_Cpp([0.5])
+@test cop1 == cop2
+
 end
