@@ -80,7 +80,7 @@ Display pair copulas sorted with increasing conditioning set.
 """->
 function display(pcc::PCC)
     # get all conditioning sets
-    condSets = Copulas.getCondSets(pcc.vine)
+    condSets = Copulas.getAllCopCondSets(pcc.vine)
     nVars = dim(pcc)
     typ = eltype(pcc.pccCops)
     println("$nVars dimensional pair copula construction of type $typ:")
@@ -136,7 +136,7 @@ function getCopNam(ind::Int, nVars::Int, condSets::IntArrays)
 end
 
 function getCopNam(ind::Int, pcc::PCC)
-    condSets = Copulas.getCondSets(pcc.vine)
+    condSets = Copulas.getAllCopCondSets(pcc.vine)
     nVars = dim(pcc)
     
     # get involved variables
@@ -205,125 +205,123 @@ end
 ## conditional probability transforms
 ##-----------------------------------
 
-function getPit(pcc::PCC, condVar::Int, condSet::Array{Int, 1})
-    # get correct sequence of condSet
-    vnStruct = getParNot(pcc)
-    
-    # get last variable in conditioning set
-    sortedSet = sortCondSet(vnStruct[:, condVar], condSet)
-    lastVar = sortedSet[end]
-
-    ## create string for output
-    condSetString = "$(sortedSet[1])"
-    for ii=2:length(sortedSet)
-        condSetString = join([condSetString, ",", sortedSet[ii]])
-    end
-
-    println("$condVar|$condSetString")
-    if length(sortedSet) > 1
-        # get conditional PITs of lower layer
-        condVar_pit = getPit(pcc, condVar, sortedSet[1:end-1])
-        lastVar_pit = getPit(pcc, lastVar, sortedSet[1:end-1])
-    else
-        condVar_pit = condVar
-        lastVar_pit = lastVar
-    end
-
-    ## create string for output
-    condSetString = []
-    if length(sortedSet) == 1
-        condSetString = ""
-    else
-        condSetString = "$(sortedSet[1])"
-        for ii=2:(length(sortedSet)-1)
-            condSetString = join([condSetString, ",", sortedSet[ii]])
-        end
+# evaluate single d-dimensional point
+function pdf(pcc::PCC, vals::Array{Int, 1})
+    # check dimensions
+    n = dim(pcc)
+    if length(vals) != n
+        error("Point must coincide with pcc dimension.")
     end
     
-    println("h($condVar,$lastVar|$condSetString)")
-    # get copula
-    ## vals = []
-    ## if condVar < lastVar
-    ##     cop = pcc.pairCops[condVar, lastVar]
-    ##     vals = hfun(cop, condVar_pit, lastVar_pit)
-    ## else
-    ##     cop = pcc.pairCops[lastVar, condVar]
-    ##     vals = vfun(cop, condVar_pit, lastVar_pit)
-    ## end
-    return condVar_pit
-end
+    # iterate over all copulas with increasing layer
+    condSets1, condSets2 = getAllVarCondSets(pcc.vine)
+    pdfVals = NaN*ones(size(condSets1))
 
-@doc doc"""
-Find a given conditioning set in the tree of a variable given in
-parent notation. If the conditioning set occurs, it will be returned
-with the same sorting as it appears in the tree: the first entry is
-directly connected to the root node. If the conditioning set is not
-found, the function throws an error.
+    maxCondSetLen = nVars - 2
+    for setLen=0:maxCondSetLen # for each layer
+        # get all conditioning sets of this layer
+        inds = find([length(cs) == setLen for cs in condSets1])
 
-The algorithm first translates the tree in parent notation into a
-`Tree`, which might be unnecessary and time consuming.
+        for copInd in inds
+            # get associated variables
+            var1, var2 = triang2sub(n, copInd)
 
-And alternative would be to search for the conditioning set directly
-in parent notation. A conditioning set of length 3 could be found as a
-sequence that arrives at the root node in the 4th step, with all steps
-including nodes that are part of the conditioning set.
-"""->
-function sortCondSet(parNot::Array{Int, 1},
-                     condSet::Array{Int, 1})
-    tP = par2tree(parNot)
-    
-    nNodes = length(condSet)
-    
-    nPaths = length(tP)
-    for ii=1:nPaths
-        if length(tP[ii]) >= nNodes
-            if issubset(condSet, tP[ii][1:nNodes])
-                return tP[ii][1:nNodes]
+            # get PITs
+            if !isempty(condSets1[copInd])
+                pit1 = getPit(pcc, var1, condSets1[copInd], vals)
+                pit2 = getPit(pcc, var2, condSets2[copInd], vals)
+            else
+                pit1 = vals[var1]
+                pit2 = vals[var2]
             end
+
+            # calculate copula density
+            cop = pcc.pccCops[copInd]
+            pdfVals[copInd] = pdf(cop, pit1, pit2)
         end
     end
-    error("Conditional set does not occur.")
+    return prod(pdfVals)
 end
 
-## @doc doc"""
-## First try for conditioning set search directly in parent notation.
-## Function does not work!! For improvements, see the documentation of
-## `sortCondSet`. 
-## """->
-## function sortCondSet2(parNot::Array{Int, 1},
-##                      condSet::Array{Int, 1})
-##     condSetSize = length(condSet)
+function getPit(pcc::PCC, condVar::Int, condSet::Array{Int, 1},
+                vals::Array{Float64, 1})
+    if isempty(condSet)
+        # do nothing
+        return vals[condVar]
+    else
+        # assure correct sequence of condSet
+        vnMatr = getParNot(pcc)
+        sortedSet = findAndSortCondSet(vnMatr[:, condVar], condSet)
 
-##     fullPathFound = false
-##     ii = 1
-##     sequence = zeros(Int, condSetSize)
+        # get last variable in conditioning set
+        lastVar = sortedSet[end]
 
-##     # iterate over variables in condSet
-##     while (!fullPathFound) & (ii <= condSetSize)
-##         atRoot = false
-##         sequence[1] = condSet[ii]
+        # get PITs
+        pit = []
+        if length(sortedSet) > 1
+            # get pits first
+            pit1 = getPit(pcc, condVar, sortedSet[1:(end-1)], vals)
+            pit2 = getPit(pcc, lastVar, sortedSet[1:(end-1)], vals)
+        else
+            pit1 = vals[condVar]
+            pit2 = vals[lastVar]
+        end
+        if condVar < lastVar
+            cop = pcc[condVar, lastVar]
+            pit = hfun(cop, pit1, pit2)
+        else
+            cop = pcc[lastVar, condVar]
+            pit = vfun(cop, pit1, pit2)
+        end
+    end    
+    return pit
+end
+    
+## function getPit(pcc::PCC, condVar::Int, condSet::Array{Int, 1})
+##     # get correct sequence of condSet
+##     vnStruct = getParNot(pcc)
+    
+##     # get last variable in conditioning set
+##     sortedSet = findAndSortCondSet(vnStruct[:, condVar], condSet)
+##     lastVar = sortedSet[end]
 
-##         # follow path of variable in parent notation
-##         jj = 2
-##         while (!atRoot) & (jj <= condSetSize)
-##             sequence[jj] = parNot[sequence[jj-1]]
-##             if sequence[jj] == 0
-##                 atRoot = true
-##             end
-##             jj += 1
-##         end
-##         ii +=1
-
-##         if !atRoot
-##             if parNot[sequence[end]] == 0
-##                 fullPathFound = true
-##             end
-##         end
+##     ## create string for output
+##     condSetString = "$(sortedSet[1])"
+##     for ii=2:length(sortedSet)
+##         condSetString = join([condSetString, ",", sortedSet[ii]])
 ##     end
 
-##     if !fullPathFound
-##         error("Conditioning set not found in given density
-##         decomposition.")
+##     println("$condVar|$condSetString")
+##     if length(sortedSet) > 1
+##         # get conditional PITs of lower layer
+##         condVar_pit = getPit(pcc, condVar, sortedSet[1:end-1])
+##         lastVar_pit = getPit(pcc, lastVar, sortedSet[1:end-1])
+##     else
+##         condVar_pit = condVar
+##         lastVar_pit = lastVar
 ##     end
-##     return sequence
+
+##     ## create string for output
+##     condSetString = []
+##     if length(sortedSet) == 1
+##         condSetString = ""
+##     else
+##         condSetString = "$(sortedSet[1])"
+##         for ii=2:(length(sortedSet)-1)
+##             condSetString = join([condSetString, ",", sortedSet[ii]])
+##         end
+##     end
+    
+##     println("h($condVar,$lastVar|$condSetString)")
+##     # get copula
+##     ## vals = []
+##     ## if condVar < lastVar
+##     ##     cop = pcc.pairCops[condVar, lastVar]
+##     ##     vals = hfun(cop, condVar_pit, lastVar_pit)
+##     ## else
+##     ##     cop = pcc.pairCops[lastVar, condVar]
+##     ##     vals = vfun(cop, condVar_pit, lastVar_pit)
+##     ## end
+##     return condVar_pit
 ## end
+

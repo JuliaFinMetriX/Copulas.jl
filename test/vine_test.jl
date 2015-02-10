@@ -52,7 +52,80 @@ expVec = [-1, 3, 0, -1, 2, 3]
 
 tr2 = Copulas.par2tree(parNotVec)
 @test tr == tr2
-    
+
+#######################
+## conditioning sets ##
+#######################
+
+## getPathToRoot
+##--------------
+
+tr = Copulas.Tree(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
+parNot = Copulas.tree2par(tr, 6)
+path = Copulas.getPathToRoot(parNot, 6)
+@test path == [5, 4]
+
+tr = Copulas.Tree(3, Array{Int, 1}[[4, 6],[2, 1], [2, 5]])
+parNot = Copulas.tree2par(tr, 6)
+path = Copulas.getPathToRoot(parNot, 2)
+@test path == []
+
+tr = Copulas.Tree(3, Array{Int, 1}[[2, 1, 4],[2, 1, 5], [2, 6]])
+parNot = Copulas.tree2par(tr, 6)
+path = Copulas.getPathToRoot(parNot, 1)
+@test path == [2]
+
+path = Copulas.getPathToRoot(parNot, 5)
+@test path == [1, 2]
+
+## getCondSet
+##-----------
+
+vn = Copulas.testvine(2)
+condSet = Copulas.getCondSet(vn, 3, 5)
+@test condSet == [2]
+
+condSet = Copulas.getCondSet(vn, 6, 3)
+@test condSet == [4, 5, 2]
+
+condSet = Copulas.getCondSet(vn, 1, 3)
+@test condSet == []
+
+## getAllCopCondSets
+##------------------
+
+vn = Copulas.testvine(2)
+condSets = Copulas.getAllCopCondSets(vn)
+
+@test condSets[end] == [4]
+
+ind = Copulas.sub2triang(6, 1, 5)
+@test condSets[ind] == [3, 2]
+
+ind = Copulas.sub2triang(6, 2, 6)
+@test condSets[ind] == [5, 4]
+
+## getAllVarCondSets
+##------------------
+
+vn = Copulas.testvine(2)
+condSets1, condSets2 = Copulas.getAllVarCondSets(vn)
+
+@test condSets1[end] == [4]
+@test condSets2[end] == [4]
+
+ind = Copulas.sub2triang(6, 1, 5)
+@test condSets1[ind] == [3, 2]
+@test condSets2[ind] == [2, 3]
+
+ind = Copulas.sub2triang(6, 2, 6)
+@test condSets1[ind] == [5, 4]
+@test condSets2[ind] == [4, 5]
+
+ind = Copulas.sub2triang(6, 1, 6)
+@test condSets1[ind] == [3, 2, 5, 4]
+@test condSets2[ind] == [4, 5, 2, 3]
+
 #############################
 ## vine analysis functions ##
 #############################

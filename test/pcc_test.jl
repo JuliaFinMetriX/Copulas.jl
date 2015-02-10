@@ -63,14 +63,42 @@ pcc[1, 4] = Copulas.ClaytonPC_Cpp([4.2])
 
 tr = Copulas.Tree(1, [2, 4], [2, 3, 10], [2, 3, 11], [5], [6, 7, 8, 9])
 parNot = Copulas.tree2par(tr, 11)
-@test Copulas.sortCondSet(parNot, [8, 7, 6]) == [6, 7, 8]
-@test Copulas.sortCondSet(parNot, [7, 6, 8]) == [6, 7, 8]
-@test Copulas.sortCondSet(parNot, [3, 2]) == [2, 3]
-@test_throws Exception Copulas.sortCondSet(parNot, [7, 8, 9])
-@test Copulas.sortCondSet(parNot, [2]) == [2]
-@test_throws Exception Copulas.sortCondSet(parNot, [7, 8, 9, 10])
+@test Copulas.findAndSortCondSet(parNot, [8, 7, 6]) == [6, 7, 8]
+@test Copulas.findAndSortCondSet(parNot, [7, 6, 8]) == [6, 7, 8]
+@test Copulas.findAndSortCondSet(parNot, [3, 2]) == [2, 3]
+@test_throws Exception Copulas.findAndSortCondSet(parNot, [7, 8, 9])
+@test Copulas.findAndSortCondSet(parNot, [2]) == [2]
+@test_throws Exception Copulas.findAndSortCondSet(parNot, [7, 8, 9, 10])
 
-## display
-##--------
+############
+## getPit ##
+############
+
+pcc = Copulas.testpcc(2)
+u = [0.3, 0.4, 0.2, 0.7]
+
+actPit = Copulas.getPit(pcc, 1, [2, 3], u)
+
+cop23 = pcc[2, 3]
+cop12 = pcc[1, 2]
+cop13 = pcc[1, 3]
+pit3_giv_2 = Copulas.vfun(cop23, u[3], u[2])
+pit1_giv_2 = Copulas.hfun(cop12, u[1], u[2])
+pit = Copulas.vfun(cop13, pit1_giv_2, pit3_giv_2)
+@test pit == actPit
+
+actPit = Copulas.getPit(pcc, 2, [3], u)
+cop23 = pcc[2, 3]
+pit = Copulas.hfun(cop23, u[2], u[3])
+@test pit == actPit
+
+pcc = Copulas.testpcc(1)
+actPit = Copulas.getPit(pcc, 2, [4, 3], u)
+
+pit2_giv_3 = Copulas.hfun(pcc[2, 3], u[2], u[3])
+pit4_giv_3 = Copulas.vfun(pcc[3, 4], u[4], u[3])
+pit = Copulas.hfun(pcc[2, 4], pit2_giv_3, pit4_giv_3)
+@test actPit == pit
+
 
 end
