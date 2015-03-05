@@ -77,9 +77,11 @@ tPC_Cpp,
 # functions
 Tree,
 Vine,
+Raw_html,
 allPathVals,
 allVals,
 condSetChk,
+initCanvas,
 par2tree,
 tree2par,
 trees2vine,
@@ -94,7 +96,8 @@ hinv,
 params,
 pdf,
 vfun,
-vinv
+vis,
+pvinv
 
 include("PairCop.jl")
 include("utils.jl")
@@ -116,6 +119,7 @@ include("PCC/PCC.jl")
 include("testFuncs.jl")
 include("testcases.jl")
 include("rand.jl")
+include("display.jl")
 
 @require Winston begin
     filePath = joinpath(Pkg.dir("Copulas"), "src", "wstPlotting.jl")
