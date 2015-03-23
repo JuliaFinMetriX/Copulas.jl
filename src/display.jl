@@ -89,7 +89,7 @@ var $dataName = $(dataStr...)
         
     ## call chart with given options
     chartCmd = """
-<script> src="https://rawgithub.com/JuliaFinMetriX/Copulas.jl/tree/master/src/charts.js"</script>
+<script> src="https://rawgithub.com/JuliaFinMetriX/Copulas.jl/master/src/charts.js"</script>
 <script>
 var actualChart = treeChart()
 .width($width)
