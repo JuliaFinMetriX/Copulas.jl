@@ -30,21 +30,22 @@ end
 @doc doc"""
 Plot tree in x11 window.
 """->
-function viz(tr::CTreeParRef)
-    stdin, proc = open(`dot -Tx11`, "w")
+function viz(tr::CTreeParRef; cmd="dot")
+    stdin, proc = open(`$cmd -Tx11`, "w")
     toGviz(tr, stdin)
     close(stdin)
 end
 
-function viz(tr::AbstractCTree)
+function viz(tr::AbstractCTree; cmd="dot")
     trPar = convert(CTreeParRef, tr)
-    viz(trPar)
+    viz(trPar, cmd = cmd)
 end
 
 function render(tr::CTreeParRef,
                 fmt::String,
+                cmd::String,
                 fname::String)
-    stdin, proc = open(`dot -T$fmt -o $fname.$fmt`, "w")
+    stdin, proc = open(`$cmd -T$fmt -o $fname.$fmt`, "w")
     toGviz(tr, stdin)
     close(stdin)
 end
