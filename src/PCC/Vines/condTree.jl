@@ -80,7 +80,7 @@ import Base.convert
 @doc doc"""
 Convert parent referencing notation to tree paths notation.
 
-The algorithm starts by finding all final nodes as those that are
+The algorithm starts by finding all final nodes as those that are not
 listed as parent node for any other variable. For the case of
 incomplete trees, nodes not yet connected are encoded with a value of
 -1. 
@@ -178,7 +178,12 @@ end
 #######################
 
 import Base.Multimedia.display
-@doc doc"""Customized display for `CTree` instances."""->
+@doc doc"""
+All AbstractCTree subtypes will basically display identically, showing
+all paths of the tree to the leaf nodes. However, they additionally
+show their type first, so that different types still can be
+distinguised. 
+"""->
 function displayInner(trPaths::CTreePaths)
     for ii=1:width(trPaths)
         println(join(["   ", string(trPaths.paths[ii])]))
@@ -195,8 +200,6 @@ end
 
 ## CTree arrays
 ##-------------
-
-@doc doc"""Customized display for arrays of `CTree` instances."""->
 function display(trArr::Array{AbstractCTree, 1})
     ## convert to array of CTreePaths and display that
     nTrees = length(trArr)
@@ -249,7 +252,7 @@ function maxDepth(paths::IntArrays)
 end
 
 @doc doc"""
-`Int` length of the longest path of a `CTreePaths` object.
+`Int` length of the longest path of a `CTree` object.
 """->
 function maxDepth(tr::CTreePaths)
     return maxDepth(tr.paths)
@@ -259,20 +262,6 @@ function maxDepth(tr::AbstractCTree)
     trPaths = convert(CTreePaths, tr)
     return maxDepth(trPaths)
 end
-
-import Base.width
-@doc doc"""
-`Int` number of paths for a given `CTreePaths` instance.
-"""->
-function width(tr::CTreePaths)
-    return length(tr.paths)
-end
-
-function width(tr::AbstractCTree)
-    trPaths = convert(CTreePaths, tr)
-    return width(trPaths)
-end
-
 
 @doc doc"""
 `Array{Int, 1}` with depths / lengths to each final node in a tree.
@@ -291,20 +280,39 @@ function getDepths(tr::AbstractCTree)
     return getDepths(trPaths)
 end
 
+import Base.width
+@doc doc"""
+`Int` number of different paths / leaf nodes of a given CTree.
+"""->
+function width(tr::CTreePaths)
+    return length(tr.paths)
+end
+
+function width(tr::AbstractCTree)
+    trPaths = convert(CTreePaths, tr)
+    return width(trPaths)
+end
+
+
 ########################
 ## check for equality ##
 ########################
 @doc doc"""
-`Bool` comparing root node and tree paths for equality.
+For equality to hold both CTrees must have equal representation
+(type). Besides, root node and paths must be identical.
 """->
 function ==(tr1::CTreePaths, tr2::CTreePaths)
     return (tr1.root == tr2.root) & (tr1.paths == tr2.paths)
 end
 
 function ==(tr1::AbstractCTree, tr2::AbstractCTree)
-    trPaths1 = convert(CTreePaths, tr1)
-    trPaths2 = convert(CTreePaths, tr2)
-    return ==(trPaths1, trPaths2)
+    if typeof(tr1) != typeof(tr2)
+        return false
+    else
+        trPaths1 = convert(CTreePaths, tr1)
+        trPaths2 = convert(CTreePaths, tr2)
+        return ==(trPaths1, trPaths2)
+    end
 end
 
 
@@ -355,6 +363,10 @@ function allNodes(tr::CTreeParRef)
     return sum(tr.tree >= 0)
 end
 
+function allNodes(tr::AbstractCTree)
+    trPar = convert(CTreeParRef, tr)
+    return allNodes(trPar)
+end
 
 @doc doc"""
 `Array{Int, 1}` of all occurring values in a tree, excluding the root
@@ -367,6 +379,11 @@ end
 
 function allPathNodes(tr::CTreeParRef)
     return sum(tr.tree > 0)
+end
+
+function allPathNodes(tr::AbstractCTree)
+    trPar = convert(CTreeParRef, tr)
+    return allPathNodes(trPar)
 end
 
 
