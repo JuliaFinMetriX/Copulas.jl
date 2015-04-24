@@ -35,6 +35,15 @@ parNot = [9, 1, 2, 1, 9, 5, 5, 7, 0]
 tPar2 = Copulas.CTreeParRef(parNot)
 @test tPar == tPar2
 
+## additional conversion tests
+##----------------------------
+
+tPar = Copulas.CTreeParRef([9, 1, 2, 1, 9, -1, 5, 7, 0])
+tPaths = Copulas.CTreePaths(9, [1, 4], [1, 2, 3], [5, 7, 8])
+@test !(tPar == tPaths)
+tPar2 = convert(Copulas.CTreeParRef, tPaths)
+@test tPar == tPar2
+
 #########################
 ## dimension functions ##
 #########################

@@ -327,7 +327,7 @@ end
 
 function unlinkedVars(tr::Tree, nVars::Int)
     ## only variables not yet linked need to be tested
-    return setdiff([1:nVars], allVals(tr))
+    return setdiff([1:nVars], allNodes(tr))
 end
 
 function reachedVertices(edges::Array{CondEdge, 1})

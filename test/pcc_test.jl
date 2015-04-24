@@ -62,7 +62,7 @@ pcc[1, 4] = Copulas.ClaytonPC_Cpp([4.2])
 ##------------
 
 tr = Copulas.Tree(1, [2, 4], [2, 3, 10], [2, 3, 11], [5], [6, 7, 8, 9])
-parNot = Copulas.tree2par(tr, 11)
+parNot = Copulas.tree2par(tr, 11).tree
 @test Copulas.findAndSortCondSet(parNot, [8, 7, 6]) == [6, 7, 8]
 @test Copulas.findAndSortCondSet(parNot, [7, 6, 8]) == [6, 7, 8]
 @test Copulas.findAndSortCondSet(parNot, [3, 2]) == [2, 3]

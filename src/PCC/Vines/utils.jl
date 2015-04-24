@@ -99,7 +99,8 @@ function tree2par(tPs::Array{Tree, 1}, nVars::Int)
     ## transform array of trees to parent notation matrix
     parNot = Array(Int, nVars, nVars)
     for ii=1:nVars
-        parNot[:, ii] = tree2par(tPs[ii], nVars)
+        tPar = convert(CTreeParRef, tPs[ii], nVars)
+        parNot[:, ii] = tPar.tree
     end
     return parNot
 end

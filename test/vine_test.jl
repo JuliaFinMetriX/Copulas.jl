@@ -46,7 +46,7 @@ kk_out = Copulas.tree2par(kk_tr, 6)
 ##-----------------
 
 tr = Tree(3, [2 5], [6])
-parNotVec = Copulas.tree2par(tr, 6)
+parNotVec = Copulas.tree2par(tr, 6).tree
 expVec = [-1, 3, 0, -1, 2, 3]
 @test parNotVec == expVec
 
@@ -61,17 +61,17 @@ tr2 = Copulas.par2tree(parNotVec)
 ##--------------
 
 tr = Copulas.Tree(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
-parNot = Copulas.tree2par(tr, 6)
+parNot = Copulas.tree2par(tr, 6).tree
 path = Copulas.getPathToRoot(parNot, 6)
 @test path == [5, 4]
 
 tr = Copulas.Tree(3, Array{Int, 1}[[4, 6],[2, 1], [2, 5]])
-parNot = Copulas.tree2par(tr, 6)
+parNot = Copulas.tree2par(tr, 6).tree
 path = Copulas.getPathToRoot(parNot, 2)
 @test path == []
 
 tr = Copulas.Tree(3, Array{Int, 1}[[2, 1, 4],[2, 1, 5], [2, 6]])
-parNot = Copulas.tree2par(tr, 6)
+parNot = Copulas.tree2par(tr, 6).tree
 path = Copulas.getPathToRoot(parNot, 1)
 @test path == [2]
 

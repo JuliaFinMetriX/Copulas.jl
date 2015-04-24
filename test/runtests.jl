@@ -1,14 +1,16 @@
 using Copulas
 using Base.Test
 
-tests = ["utils_test.jl",
-         "paircop_test.jl",
-         "tree_test.jl",
-         "vine_test.jl",
-         "pcc_test.jl",
-         "vineConstruction_test.jl",
-         "ParamPC_tests.jl",
-         "ParamPC_Cpp_tests.jl"
+tests = [
+         ## "utils_test.jl",
+         ## "paircop_test.jl",
+         "condTree_test.jl",
+         "graphviz_test.jl"
+         ## "vine_test.jl",
+         ## "pcc_test.jl",
+         ## "vineConstruction_test.jl",
+         ## "ParamPC_tests.jl",
+         ## "ParamPC_Cpp_tests.jl"
          ]
 
 println("Running copula tests:")
