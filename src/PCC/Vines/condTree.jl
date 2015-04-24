@@ -24,7 +24,7 @@ Paths will be stored in lexicographical order.
 CTreePaths(3, [1, 2], [1, 4], [5], [6, 7])
 ````
 """->
-type CTreePaths
+type CTreePaths <: AbstractCTree
     root::Int
     paths::IntArrays
     
@@ -63,12 +63,9 @@ CTree representation in parent reference notation. `tree` is an
 The root node is indicated with parent 0, while not yet connected
 nodes have parent -1.
 """->
-type CTreeParRef
+type CTreeParRef <: AbstractCTree
     tree::Array{Int, 1}
 end
-
-
-
 
 
 #################
@@ -76,6 +73,9 @@ end
 #################
 
 import Base.convert
+
+## convert to CTreePaths
+##----------------------
 
 @doc doc"""
 Convert parent referencing notation to tree paths notation.
@@ -86,7 +86,7 @@ incomplete trees, nodes not yet connected are encoded with a value of
 -1. 
 """->
 function convert(::Type{CTreePaths}, tr::CTreeParRef)
-    parNot = tr.trees
+    parNot = tr.tree
     
     nVars = length(parNot)
     
@@ -125,6 +125,13 @@ function convert(::Type{CTreePaths}, tr::CTreeParRef)
     return CTreePaths(rootNode, treePaths)
 end
 
+function convert(::Type{CTreePaths}, tr::CTreePaths)
+    return tr
+end
+
+## convert to CTreeParRef
+##-----------------------
+
 @doc doc"""
 Transform CTree given as list of paths to final nodes to parent
 referencing notation. For parent referencing, generally all variables
@@ -133,7 +140,7 @@ are supported, and missing variables are denoted with a parent of -1.
 To determine the last variable `convert` simply takes the maximum
 value of occurring nodes in all paths.
 """->
-function convert(::type{CTreeParRef}, tr::CTreePaths, nVars::Int)
+function convert(::Type{CTreeParRef}, tr::CTreePaths, nVars::Int)
     ## transform single tree to parent notation vector
     parNot = -1*ones(Int, nVars)
     parNot[tr.root] = 0
@@ -154,10 +161,15 @@ function convert(::type{CTreeParRef}, tr::CTreePaths, nVars::Int)
 end
 
 
-function convert(::type{CTreeParRef}, tr::CTreePaths)
-    nPaths = length(tr.paths)
+function convert(::Type{CTreeParRef}, tr::CTreePaths)
+    nPaths = width(tr)
     nVars = maximum(Int[maximum(tr.paths[ii]) for ii=1:nPaths])
+    nVars = maximum([tr.root, nVars])
     return convert(CTreeParRef, tr, nVars)
+end
+
+function convert(::Type{CTreeParRef}, tr::CTreeParRef)
+    return tr
 end
 
 
@@ -165,33 +177,62 @@ end
 ## display functions ##
 #######################
 
-
 import Base.Multimedia.display
-@doc doc"""Customized display for `CTreePaths` instances."""->
-function display(tP::CTreePaths)
-    println("Root node: $(tP.root)")
-    for ii=1:length(tP)
-        println(join(["   ", string(tP.paths[ii])]))
+@doc doc"""Customized display for `CTree` instances."""->
+function displayInner(trPaths::CTreePaths)
+    for ii=1:width(trPaths)
+        println(join(["   ", string(trPaths.paths[ii])]))
     end
     return Nothing
 end
 
-@doc doc"""Customized display for arrays of `CTreePaths` instances."""->
-function display(tPArr::Array{CTreePaths, 1})
-    nTrees = length(tPArr)
+## display AbstractCTree
+function display(tr::AbstractCTree)
+    println("type: $(typeof(tr))")
+    trPaths = convert(CTreePaths, tr)
+    displayInner(trPaths)
+end
+
+## CTree arrays
+##-------------
+
+@doc doc"""Customized display for arrays of `CTree` instances."""->
+function display(trArr::Array{AbstractCTree, 1})
+    ## convert to array of CTreePaths and display that
+    nTrees = length(trArr)
     for ii=1:nTrees
-        println("")
-        println("$(tPArr[ii].root):")
-        for jj=1:length(tPArr[ii])
-            println(join(["   ", string(tPArr[ii].paths[jj])]))
-        end
+        println("type: $(typeof(trArr[ii]))")
+        currTree = convert(CTreePaths, trArr[ii])
+        println("$(currTree.root):")
+        displayInner(currTree)
     end
-    return Nothing
 end
 
-######################
-## length functions ##
-######################
+function display(trArr::Array{CTreePaths, 1})
+    ## convert to array of CTreePaths and display that
+    nTrees = length(trArr)
+    for ii=1:nTrees
+        currTree = trArr[ii]
+        println("type: $(typeof(currTree))")
+        println("$(currTree.root):")
+        displayInner(currTree)
+    end
+end
+
+function display(trArr::Array{CTreeParRef, 1})
+    ## convert to array of CTreePaths and display that
+    nTrees = length(trArr)
+    for ii=1:nTrees
+        println("type: $(typeof(trArr[ii]))")
+        currTree = convert(CTreePaths, trArr[ii])
+        println("$(currTree.root):")
+        displayInner(currTree)
+    end
+end
+
+#########################
+## dimension functions ##
+#########################
 
 @doc doc"""
 `Int` length of the longest path of an `Array` of paths. 
@@ -210,28 +251,44 @@ end
 @doc doc"""
 `Int` length of the longest path of a `CTreePaths` object.
 """->
-function maxDepth(tP::CTreePaths)
-    return maxDepth(tP.paths)
+function maxDepth(tr::CTreePaths)
+    return maxDepth(tr.paths)
 end
 
-import Base.length
+function maxDepth(tr::AbstractCTree)
+    trPaths = convert(CTreePaths, tr)
+    return maxDepth(trPaths)
+end
+
+import Base.width
 @doc doc"""
 `Int` number of paths for a given `CTreePaths` instance.
 """->
-function length(tP::CTreePaths)
-    return length(tP.paths)
+function width(tr::CTreePaths)
+    return length(tr.paths)
 end
+
+function width(tr::AbstractCTree)
+    trPaths = convert(CTreePaths, tr)
+    return width(trPaths)
+end
+
 
 @doc doc"""
 `Array{Int, 1}` with depths / lengths to each final node in a tree.
 """->
-function getDepths(tP::CTreePaths)
-    nPaths = length(tP)
+function getDepths(tr::CTreePaths)
+    nPaths = width(tr)
     depths = Array(Int, nPaths)
     for ii=1:nPaths
-        depths[ii] = length(tP.paths[ii])
+        depths[ii] = length(tr.paths[ii])
     end
     return depths
+end
+
+function getDepths(tr::AbstractCTree)
+    trPaths = convert(CTreePaths, tr)
+    return getDepths(trPaths)
 end
 
 ########################
@@ -240,9 +297,16 @@ end
 @doc doc"""
 `Bool` comparing root node and tree paths for equality.
 """->
-function ==(tP1::CTreePaths, tP2::CTreePaths)
-    return (tP1.root == tP2.root) & (tP1.paths == tP2.paths)
+function ==(tr1::CTreePaths, tr2::CTreePaths)
+    return (tr1.root == tr2.root) & (tr1.paths == tr2.paths)
 end
+
+function ==(tr1::AbstractCTree, tr2::AbstractCTree)
+    trPaths1 = convert(CTreePaths, tr1)
+    trPaths2 = convert(CTreePaths, tr2)
+    return ==(trPaths1, trPaths2)
+end
+
 
 ##############
 ## getindex ##
@@ -250,17 +314,17 @@ end
 
 import Base.getindex
 
-function getindex(tP::CTreePaths, pathInd::Int, pathNode::Int)
+function getindex(tr::CTreePaths, pathInd::Int, pathNode::Int)
     ## single entry
-    return tP.paths[pathInd][pathNode]
+    return tr.paths[pathInd][pathNode]
 end
 
-function getindex(tP::CTreePaths, pathInd::Int)
+function getindex(tr::CTreePaths, pathInd::Int)
     ## single path
-    return tP.paths[pathInd]
+    return tr.paths[pathInd]
 end
 
-function getindex(tP::CTreePaths, pathInds::Array{Int, 1},
+function getindex(tr::CTreePaths, pathInds::Array{Int, 1},
                   pathNodes::Array{Int, 1})
     ## multiple values, sorted, only unique entries
     nVals = length(pathInds)
@@ -269,7 +333,7 @@ function getindex(tP::CTreePaths, pathInds::Array{Int, 1},
     end
     vals = Array(Int, nVals)
     for ii=1:nVals
-        vals[ii] = tP[pathInds[ii], pathNodes[ii]]
+        vals[ii] = tr[pathInds[ii], pathNodes[ii]]
     end
     return sort(unique(vals))
 end
@@ -282,19 +346,29 @@ end
 `Array{Int, 1}` of all occurring values in a tree, including the root
 node. 
 """->
-function allVals(tP::CTreePaths)
-    vals = [tP.root, [tP.paths...]]
+function allNodes(tr::CTreePaths)
+    vals = [tr.root, [tr.paths...]]
     return sort(unique(vals))
 end
+
+function allNodes(tr::CTreeParRef)
+    return sum(tr.tree >= 0)
+end
+
 
 @doc doc"""
 `Array{Int, 1}` of all occurring values in a tree, excluding the root
 node. 
 """->
-function allPathVals(tP::CTreePaths)
-    vals = [[tP.paths...]]
+function allPathNodes(tr::CTreePaths)
+    vals = [[tr.paths...]]
     return sort(unique(vals))
 end
+
+function allPathNodes(tr::CTreeParRef)
+    return sum(tr.tree > 0)
+end
+
 
 #############
 ## condSet ##
@@ -307,22 +381,27 @@ the exact order of numbers within the conditional set does not matter.
 
 ## Example
 
-tP = Copulas.CTreePaths(6, [1 2 3], [1 2 4], [5 3])
-@test Copulas.condSetChk([2, 1], tP)
-@test !(Copulas.condSetChk([2, 4], tP))
+tr = Copulas.CTreePaths(6, [1 2 3], [1 2 4], [5 3])
+@test Copulas.condSetChk([2, 1], tr)
+@test !(Copulas.condSetChk([2, 4], tr))
 
 """->
-function condSetChk(arr::Array{Int, 1}, tP::CTreePaths)
+function condSetChk(arr::Array{Int, 1}, tr::CTreePaths)
     ## does conditional set occur at beginning of some path?
     nNodes = length(arr)
     
-    nPaths = length(tP)
+    nPaths = length(tr)
     for ii=1:nPaths
-        if length(tP[ii]) >= nNodes
-            if issubset(arr, tP[ii][1:nNodes])
+        if length(tr[ii]) >= nNodes
+            if issubset(arr, tr[ii][1:nNodes])
                 return true
             end
         end
     end
     return false
+end
+
+function condSetChk(arr::Array{Int, 1}, tr::AbstractCTree)
+    trPaths = convert(CTreePaths, tr)
+    return condSetChk(trPaths)
 end
