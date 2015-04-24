@@ -3,6 +3,7 @@ module Copulas
 using Base.Test
 ## using Plotly
 using Requires
+using JFinM_Charts
 
 VERSION < v"0.4-" && using Docile
 
@@ -109,9 +110,8 @@ include("ModPCs/ModPC.jl")
 include("ModPCs/rotations.jl")
 include("ModPCs/ccwRotations.jl")
 include("MixPCs/MixPC.jl")
-include("PCC/Vines/tree.jl")
 include("PCC/Vines/edge.jl")
-include("PCC/Vines/tree.jl")
+include("PCC/Vines/condTree.jl")
 include("PCC/Vines/vine.jl")
 include("PCC/Vines/utils.jl")
 include("PCC/Vines/vineConstruction.jl")
@@ -120,6 +120,7 @@ include("testFuncs.jl")
 include("testcases.jl")
 include("rand.jl")
 include("display.jl")
+include("d3_export.jl")
 
 @require Winston begin
     filePath = joinpath(Pkg.dir("Copulas"), "src", "wstPlotting.jl")

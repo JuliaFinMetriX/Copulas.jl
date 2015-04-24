@@ -18,8 +18,8 @@ paths = Array{Int, 1}[[1], [1, 2, 3], [2, 3, 4], [2, 1]]
 
 ## conversion to matrix
 pathsArr = [1 1 2 2; 0 2 3 1; 0 3 4 0]
-@test Copulas.tree2arr(paths) == pathsArr
-@test Copulas.arr2tree(pathsArr) == paths
+@test Copulas._cTreePaths2arr(paths) == pathsArr
+@test Copulas._arr2CTreePaths(pathsArr) == paths
 
 ## sorting paths
 paths = Array{Int, 1}[[1, 2, 3], [1], [2, 3, 4], [2, 1]]
@@ -33,10 +33,10 @@ sortedPaths = Array{Int, 1}[[1], [1, 2, 3], [2, 1], [2, 3, 4]]
 ## constructors
 ##-------------
 
-tP1 = Copulas.Tree(5, [1], [1 2 3], [2 3 4], [2 1])
+tP1 = Copulas.CTreePaths(5, [1], [1 2 3], [2 3 4], [2 1])
 
 paths = Array{Int, 1}[[1], [1, 2, 3], [2, 3, 4], [2, 1]]
-tP = Copulas.Tree(5, paths)
+tP = Copulas.CTreePaths(5, paths)
 @test tP == tP1
 @test tP.paths[3] == [2, 1]
 
