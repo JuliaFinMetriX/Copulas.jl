@@ -199,7 +199,7 @@ function setindex!(pcc::PCC, cop::PairCop,
 end
 
 function getParNot(pcc::PCC)
-    return pcc.vine.trees
+    return convert(CTreeParRef, pcc.vine)
 end
 
 ## conditional probability transforms
@@ -250,8 +250,8 @@ function getPit(pcc::PCC, condVar::Int, condSet::Array{Int, 1},
         return vals[condVar]
     else
         # assure correct sequence of condSet
-        vnMatr = getParNot(pcc)
-        sortedSet = findAndSortCondSet(vnMatr[:, condVar], condSet)
+        trPar = CTreeParRef(pcc.vine.trees[:, condVar])
+        sortedSet = findAndSortCondSet(trPar, condSet)
 
         # get last variable in conditioning set
         lastVar = sortedSet[end]

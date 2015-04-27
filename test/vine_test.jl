@@ -21,36 +21,32 @@ display(Copulas.Vine([0 2; 1 0]))
 ##########################
 
 dVine = Copulas.testvine(1)
-tPexp = Copulas.Tree(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
-@test tPexp == Copulas.par2tree(dVine.trees[:, 3])
+tPexp = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
+@test tPexp == Copulas.convert(Copulas.CTreePaths, dVine.trees[:, 3])
 
 ## create vine with parent notation
 vn = Copulas.testvine(2)
 
 ## vine matrix to tree and back
-kk_tr = Copulas.par2tree(vn.trees)
-kk_out = Copulas.tree2par(kk_tr, 6)
-@test kk_out == vn.trees
-@test vn == Copulas.trees2vine(kk_tr, 6)
+kk_tr = convert(Copulas.CTreePaths, vn)
+@test vn == Copulas.convert(Copulas.Vine, kk_tr)
 
 ## create vine with parent notation
 vn = Copulas.testvine(3)
 
 ## vine matrix to tree and back
-kk_tr = Copulas.vine2trees(vn)
-kk_out = Copulas.tree2par(kk_tr, 6)
-@test kk_out == vn.trees
-@test vn == Copulas.trees2vine(kk_tr, 6)
+kk_tr = Copulas.convert(Copulas.CTreePaths, vn)
+@test vn == Copulas.convert(Copulas.Vine, kk_tr)
 
 ## unfinished vines
 ##-----------------
 
-tr = Tree(3, [2 5], [6])
-parNotVec = Copulas.tree2par(tr, 6).tree
+tr = Copulas.CTreePaths(3, [2 5], [6])
+parNotVec = Copulas.convert(Copulas.CTreeParRef, tr, 6)
 expVec = [-1, 3, 0, -1, 2, 3]
-@test parNotVec == expVec
+@test parNotVec.tree == expVec
 
-tr2 = Copulas.par2tree(parNotVec)
+tr2 = Copulas.convert(Copulas.CTreePaths, parNotVec)
 @test tr == tr2
 
 #######################
@@ -60,22 +56,19 @@ tr2 = Copulas.par2tree(parNotVec)
 ## getPathToRoot
 ##--------------
 
-tr = Copulas.Tree(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
-parNot = Copulas.tree2par(tr, 6).tree
-path = Copulas.getPathToRoot(parNot, 6)
+tr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
+path = Copulas.getPathToRoot(tr, 6)
 @test path == [5, 4]
 
 tr = Copulas.Tree(3, Array{Int, 1}[[4, 6],[2, 1], [2, 5]])
-parNot = Copulas.tree2par(tr, 6).tree
-path = Copulas.getPathToRoot(parNot, 2)
+path = Copulas.getPathToRoot(tr, 2)
 @test path == []
 
 tr = Copulas.Tree(3, Array{Int, 1}[[2, 1, 4],[2, 1, 5], [2, 6]])
-parNot = Copulas.tree2par(tr, 6).tree
-path = Copulas.getPathToRoot(parNot, 1)
+path = Copulas.getPathToRoot(tr, 1)
 @test path == [2]
 
-path = Copulas.getPathToRoot(parNot, 5)
+path = Copulas.getPathToRoot(tr, 5)
 @test path == [1, 2]
 
 ## getCondSet

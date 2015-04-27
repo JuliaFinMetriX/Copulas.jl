@@ -162,11 +162,11 @@ dVn4 = Copulas.Vine([0 2 2 2;
                    3 3 3 0])
 
 ## given first dvine layer
-trs = [Copulas.Tree(1, [2]),
-       Copulas.Tree(2, [1], [3]),
-       Copulas.Tree(3, [2], [4]),
-       Copulas.Tree(4, [3])]
-vn = Copulas.trees2vine(trs, 4)
+trs = [Copulas.CTreePaths(1, [2]),
+       Copulas.CTreePaths(2, [1], [3]),
+       Copulas.CTreePaths(3, [2], [4]),
+       Copulas.CTreePaths(4, [3])]
+vn = Copulas.Vine(trs)
 
 ## construct D-Vine
 vnConstructed = Copulas.vineFrom2(vn)

@@ -43,6 +43,36 @@ function Vine(tr::Array{Int, 2})
     return Vine(tr, [1:nVars])
 end
 
+function Vine(trs::Array{AbstractCTree, 1})
+    nTrees = length(trs)
+    parNot = Array(Int, nTrees, nTrees)
+    for ii=1:nTrees
+        currTree = convert(CTreeParRef, trs[ii])
+        parNot[:, ii] = currTree.tree
+    end
+    return Vine(parNot, [1:nTrees])
+end
+
+function Vine(trs::Array{CTreePaths, 1})
+    nTrees = length(trs)
+    parNot = Array(Int, nTrees, nTrees)
+    for ii=1:nTrees
+        currTree = convert(CTreeParRef, trs[ii], nTrees)
+        parNot[:, ii] = currTree.tree
+    end
+    return Vine(parNot, [1:nTrees])
+end
+
+function Vine(trs::Array{CTreeParRef, 1})
+    nTrees = length(trs)
+    parNot = Array(Int, nTrees, nTrees)
+    for ii=1:nTrees
+        currTree = convert(CTreeParRef, trs[ii])
+        parNot[:, ii] = currTree.tree
+    end
+    return Vine(parNot, [1:nTrees])
+end
+
 #############
 ## display ##
 #############
@@ -57,9 +87,10 @@ function display(vn::Vine)
 
     nVars = size(vn.trees, 1)
     
-    vineTrees = Array(Tree, nVars)
+    vineTrees = Array(CTreePaths, nVars)
     for ii=1:nVars
-        vineTrees[ii] = par2tree(vn.trees[:, ii])
+        trPar = CTreeParRef(vn.trees[:, ii])
+        vineTrees[ii] = convert(CTreePaths, trPar)
     end
     println("VINE of $nVars variables:")
     println("")
@@ -74,6 +105,30 @@ end
 
 function ==(vn1::Vine, vn2::Vine)
     return vn1.trees == vn2.trees
+end
+
+################
+## conversion ##
+################
+
+import Base.convert
+function convert(::Type{CTreePaths}, vn::Vine)
+    nVars = size(vn.trees, 1)
+    trees = Array(CTreePaths, nVars)
+    for ii=1:nVars
+        trees[ii] = convert(CTreePaths, vn.trees[:, ii])
+    end
+    return trees
+end
+
+function convert(::Type{Vine}, trArr::Array{CTreePaths, 1})
+    nVars = length(trArr)
+    vnTrees = Array(Int, nVars, nVars)
+    for ii=1:nVars
+        trPar = convert(CTreeParRef, trArr[ii])
+        vnTrees[:, ii] = trPar.tree
+    end
+    return Vine(vnTrees)
 end
 
 ##############
@@ -229,7 +284,7 @@ function getAllCopCondSets(vn::Vine)
     for ii=1:(nVars-1)
         root = ii
         for jj=(ii+1):nVars
-            path = getPathToRoot(vn.trees[:, ii], jj)
+            path = getPathToRoot(CTreeParRef(vn.trees[:, ii]), jj)
             currCondSet = flipud(path)
             condSets[ind] = currCondSet
             ind += 1
@@ -254,9 +309,9 @@ function getAllVarCondSets(vn::Vine)
     for ii=1:(nVars-1)
         root = ii
         for jj=(ii+1):nVars
-            path = getPathToRoot(vn.trees[:, ii], jj)
+            path = getPathToRoot(CTreeParRef(vn.trees[:, ii]), jj)
             condSets1[ind] = flipud(path)
-            path = getPathToRoot(vn.trees[:, jj], ii)
+            path = getPathToRoot(CTreeParRef(vn.trees[:, jj]), ii)
             condSets2[ind] = flipud(path)
             ind += 1
         end
@@ -271,7 +326,8 @@ such that the order matches the requirement to calculate var1|k,l,m.
 """->
 function getCondSet(vn::Vine, var1::Int, var2::Int)
     parNot = vn.trees[:, var1]
-    pathToVar1 = getPathToRoot(parNot, var2)
+    trPar = CTreeParRef(parNot)
+    pathToVar1 = getPathToRoot(trPar, var2)
     return flipud(pathToVar1)
 end
 
@@ -280,7 +336,8 @@ For tree given in parent notation, get full path from variable `var`
 to root node. Path does neither include `var` nor `root`. The first
 element is connected to `var`, the last one to `root`.
 """->
-function getPathToRoot(parNot::Array{Int, 1}, var::Int)
+function getPathToRoot(tr::CTreeParRef, var::Int)
+    parNot = tr.tree
     rootNode = find(parNot .== 0)[1]
     notAtRoot = true
     path = Int[]
@@ -295,6 +352,12 @@ function getPathToRoot(parNot::Array{Int, 1}, var::Int)
     end
     return path
 end
+
+function getPathToRoot(tr::AbstractCTree, var::Int)
+    trPar = convert(CTreeParRef, tr)
+    return getPathToRoot(trPar, var)
+end
+    
 
 @doc doc"""
 Find a given conditioning set in the tree of a variable given in
@@ -311,17 +374,17 @@ in parent notation. A conditioning set of length 3 could be found as a
 sequence that arrives at the root node in the 4th step, with all steps
 including nodes that are part of the conditioning set.
 """->
-function findAndSortCondSet(parNot::Array{Int, 1},
+function findAndSortCondSet(tr::CTreeParRef,
                      condSet::Array{Int, 1})
-    tP = par2tree(parNot)
+    trPar = convert(CTreePaths, tr)
     
     nNodes = length(condSet)
     
-    nPaths = length(tP)
+    nPaths = width(trPar)
     for ii=1:nPaths
-        if length(tP[ii]) >= nNodes
-            if issubset(condSet, tP[ii][1:nNodes])
-                return tP[ii][1:nNodes]
+        if length(trPar[ii]) >= nNodes
+            if issubset(condSet, trPar[ii][1:nNodes])
+                return trPar[ii][1:nNodes]
             end
         end
     end

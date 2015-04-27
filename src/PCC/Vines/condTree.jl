@@ -129,6 +129,11 @@ function convert(::Type{CTreePaths}, tr::CTreePaths)
     return tr
 end
 
+function convert(::Type{CTreePaths}, tr::Array{Int, 1})
+    trPar = CTreeParRef(tr)
+    return convert(CTreePaths, trPar)
+end
+
 ## convert to CTreeParRef
 ##-----------------------
 
@@ -280,7 +285,6 @@ function getDepths(tr::AbstractCTree)
     return getDepths(trPaths)
 end
 
-import Base.width
 @doc doc"""
 `Int` number of different paths / leaf nodes of a given CTree.
 """->

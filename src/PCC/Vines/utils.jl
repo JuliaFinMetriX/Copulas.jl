@@ -58,57 +58,57 @@ end
 ## conversion functions ##
 ##########################
 
-@doc doc"""
-Convert `Array{Int, 1}` of tree information given in parent notation
-into a `Tree` instance. Parent notation specifies for each variable
-its single parent in an acyclic tree.
+## @doc doc"""
+## Convert `Array{Int, 1}` of tree information given in parent notation
+## into a `Tree` instance. Parent notation specifies for each variable
+## its single parent in an acyclic tree.
 
-The algorithm starts by finding all final nodes as those that are
-listed as parent node for any other variable. For the case of
-incomplete trees, nodes not yet connected are encoded with a value of
--1. 
-"""->
-function par2tree(parNot::Array{Int, 1})
-    ## transform single parent notation column to tree
-    tr = CTreeParRef(parNot)
-    return convert(CTreePaths, tr)
-end
+## The algorithm starts by finding all final nodes as those that are
+## listed as parent node for any other variable. For the case of
+## incomplete trees, nodes not yet connected are encoded with a value of
+## -1. 
+## """->
+## function par2tree(parNot::Array{Int, 1})
+##     ## transform single parent notation column to tree
+##     tr = CTreeParRef(parNot)
+##     return convert(CTreePaths, tr)
+## end
 
-function par2tree(parNot::Array{Int, 2})
-    ## transform parent notation matrix to array of trees
-    nVars = size(parNot, 2)
-    trees = Array(CTreePaths, nVars)
-    for ii=1:nVars
-        trees[ii] = par2tree(parNot[:, ii])
-    end
-    return trees
-end
+## function par2tree(parNot::Array{Int, 2})
+##     ## transform parent notation matrix to array of trees
+##     nVars = size(parNot, 2)
+##     trees = Array(CTreePaths, nVars)
+##     for ii=1:nVars
+##         trees[ii] = par2tree(parNot[:, ii])
+##     end
+##     return trees
+## end
 
-@doc doc"""
-Transform `Tree` to `Array{Int, 1}` parent notation. Root nodes get
-parent value of 0. Not yet connected nodes are encoded as value -1.
-"""->
-function tree2par(tP::Tree, nVars::Int)
-    return convert(CTreeParRef, tP, nVars)
-end
+## @doc doc"""
+## Transform `Tree` to `Array{Int, 1}` parent notation. Root nodes get
+## parent value of 0. Not yet connected nodes are encoded as value -1.
+## """->
+## function tree2par(tP::Tree, nVars::Int)
+##     return convert(CTreeParRef, tP, nVars)
+## end
 
-@doc doc"""
-Transform `Array` of `Tree`s into parent notation square matrix.
-"""->
-function tree2par(tPs::Array{Tree, 1}, nVars::Int)
-    ## transform array of trees to parent notation matrix
-    parNot = Array(Int, nVars, nVars)
-    for ii=1:nVars
-        tPar = convert(CTreeParRef, tPs[ii], nVars)
-        parNot[:, ii] = tPar.tree
-    end
-    return parNot
-end
+## @doc doc"""
+## Transform `Array` of `Tree`s into parent notation square matrix.
+## """->
+## function tree2par(tPs::Array{Tree, 1}, nVars::Int)
+##     ## transform array of trees to parent notation matrix
+##     parNot = Array(Int, nVars, nVars)
+##     for ii=1:nVars
+##         tPar = convert(CTreeParRef, tPs[ii], nVars)
+##         parNot[:, ii] = tPar.tree
+##     end
+##     return parNot
+## end
 
-function vine2trees(vn::Vine)
-    return par2tree(vn.trees)
-end
+## function vine2trees(vn::Vine)
+##     return par2tree(vn.trees)
+## end
 
-function trees2vine(trs::Array{Tree, 1}, nVars::Int)
-    return Vine(tree2par(trs, nVars))
-end
+## function trees2vine(trs::Array{Tree, 1}, nVars::Int)
+##     return Vine(tree2par(trs, nVars))
+## end

@@ -16,7 +16,7 @@ function vineFrom2(vn::Vine)
     
     for layerNb=2:nLayers
         ## get current vine in tree notation
-        trs = vine2trees(vn)
+        trs = convert(CTreePaths, vn)
 
         ## get new conditional edges
         newEdges = selectLinks(trs, layerNb)
@@ -42,7 +42,7 @@ end
 ##################
 
 ## select edges out of list of possible new edges
-function selectLinks(trs::Array{Tree, 1}, nrLayer::Int)
+function selectLinks(trs::Array{CTreePaths, 1}, nrLayer::Int)
     ## some edges are automatically selected, because they need to be
     ## picked
     ##
