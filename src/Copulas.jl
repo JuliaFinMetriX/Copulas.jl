@@ -121,7 +121,7 @@ include("testFuncs.jl")
 include("testcases.jl")
 include("rand.jl")
 include("display.jl")
-include("d3_export.jl")
+## include("d3_export.jl")
 
 @require Winston begin
     filePath = joinpath(Pkg.dir("Copulas"), "src", "wstPlotting.jl")
