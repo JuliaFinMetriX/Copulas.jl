@@ -11,6 +11,7 @@ easily replace the stream with for example a file or a process.
 function toGviz(tr::CTreeParRef, stream::IO)
     nVars = size(tr.tree, 1)
     write(stream, "digraph {\n")
+    write(stream, "node [shape=circle];\n")
     for ii=1:nVars
         parNode = tr.tree[ii]
         if parNode != 0
@@ -69,6 +70,7 @@ function toGviz(vn::Copulas.Vine, stream::IO, maxLayer::Int)
     nVars = size(vn.trees, 1)
     layers = Copulas.linkLayers(vn)
     write(stream, "graph G {\n")
+    write(stream, "node [shape=circle];\n")
     for ii=1:nVars
         for jj=ii+1:nVars
             currLayer = layers[ii, jj]
@@ -96,5 +98,39 @@ end
 function viz(vn::Copulas.Vine, maxLayer::Int; cmd="neato")
     stdin, proc = open(`$cmd -Tx11`, "w")
     toGviz(vn, stdin, maxLayer)
+    close(stdin)
+end
+
+#########################################
+## Vine as array of conditioning trees ##
+#########################################
+
+function toGvizTree(vn::Copulas.Vine, stream::IO)
+    nVars = size(vn.trees, 1)
+    write(stream, "digraph {\n")
+    write(stream, "node [shape=circle];\n")
+    write(stream, "edge [arrowhead=none];\n")
+    for rootVar=1:nVars
+        write(stream, "\"$rootVar in $rootVar\" [label=\"$rootVar\"];\n")
+        for ii=1:nVars
+            parNode = vn.trees[ii, rootVar]
+            if parNode > 0
+                write(stream, "\"$ii in $rootVar\" [label=\"$ii\"];\n")
+                write(stream, "\"$parNode in $rootVar\" -> \"$ii in $rootVar\";\n")
+            end
+        end
+    end
+    write(stream, "}")
+end
+
+function toGvizTree(vn::Copulas.Vine)
+    str = IOBuffer()
+    toGvizTree(vn, str)
+    takebuf_string(str)
+end
+
+function vizTree(vn::Copulas.Vine; cmd="dot")
+    stdin, proc = open(`$cmd -Tx11`, "w")
+    toGvizTree(vn, stdin)
     close(stdin)
 end
