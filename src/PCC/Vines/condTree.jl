@@ -149,7 +149,7 @@ function convert(::Type{CTreeParRef}, tr::CTreePaths, nVars::Int)
     ## transform single tree to parent notation vector
     parNot = -1*ones(Int, nVars)
     parNot[tr.root] = 0
-
+    
     nPaths = length(tr.paths)
     
     for ii=1:nPaths
@@ -425,4 +425,45 @@ end
 function condSetChk(arr::Array{Int, 1}, tr::AbstractCTree)
     trPaths = convert(CTreePaths, tr)
     return condSetChk(trPaths)
+end
+
+#############
+## attach! ##
+#############
+
+@doc doc"""
+Attach new node to unfinished conditioning tree of type CTreePaths
+with given conditioning set.
+"""->
+function attach!(tr::CTreePaths, newNode::Int, condSet::Array{Int, 1})
+    nPaths = width(tr)
+    nNodes = length(condSet)
+    for ii=1:nPaths
+        path = tr.paths[ii]
+        if length(path) >= nNodes
+            if issubset(condSet, path[1:nNodes])
+                if length(path) == nNodes
+                    ## attach to path
+                    push!(path, newNode)
+                    break
+                else
+                    ## new path
+                    condSetSorted = path[1:nNodes]
+                    newPath = [condSetSorted, newNode]
+                    push!(tr.paths, newPath)
+                    break
+                end
+            end
+        end
+    end
+    ## resort arrays
+    nPaths = length(tr.paths)
+    pathsSorted = sortPaths(tr.paths)
+    for ii=1:nPaths
+        tr.paths[ii] = pathsSorted[ii]
+    end
+end
+
+function attach!(tr::CTreePaths, newNode::Int, xx::Array{None,1})
+    attach!(tr, newNode, Array(Int, 0))
 end

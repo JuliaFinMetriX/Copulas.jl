@@ -7,6 +7,7 @@ tests = [
          ## "condTree_test.jl",
          ## "graphviz_test.jl",
          "vine_test.jl",
+         "rvine_matrix_test.jl",
          "pcc_test.jl",
          "vineConstruction_test.jl",
          "ParamPC_tests.jl",

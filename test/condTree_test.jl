@@ -103,5 +103,40 @@ for tr in allTrees
     @test Copulas.allPathNodes(tr1) == [1, 2, 3, 4, 5, 6, 7, 8]
 end
 
+#############
+## attach! ##
+#############
+
+#############
+## attach! ##
+#############
+
+## attach to end of path
+tr = Copulas.CTreePaths(1, [2 3], [4])
+Copulas.attach!(tr, 5, [2,3])
+
+expOut = Copulas.CTreePaths(1, [2 3 5], [4])
+@test tr == expOut
+
+## attach with empty condset
+tr = Copulas.CTreePaths(1, [2 3], [4])
+Copulas.attach!(tr, 5, Array(Int, 0))
+
+expOut = Copulas.CTreePaths(1, [2 3], [4], [5])
+@test tr == expOut
+
+## attach with non-matching condset
+tr = Copulas.CTreePaths(1, [2 3], [4])
+Copulas.attach!(tr, 6, [7, 8])
+
+expOut = Copulas.CTreePaths(1, [2 3], [4])
+@test tr == expOut
+
+## attach to middle of path
+tr = Copulas.CTreePaths(1, [2 3], [4])
+Copulas.attach!(tr, 5, [2]) # does not sort
+
+expOut = Copulas.CTreePaths(1, [2 3], [4], [2 5])
+@test tr == expOut
 
 end
