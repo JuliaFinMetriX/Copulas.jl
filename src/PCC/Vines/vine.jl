@@ -77,7 +77,7 @@ end
 ##------------
 
 function dg(vn::Vine)
-    return dg.trees
+    return vn.trees
 end
 
 #############

@@ -86,3 +86,25 @@ for ii=1:6
     vn2 = convert(Copulas.Vine, rmatr)
     @test vn.trees == vn2.trees
 end
+
+## convert two different RVines representing same vine
+rmatr1 = Copulas.RVMatrix([4 0 0 0 0 0 0;
+                           7 5 0 0 0 0 0;
+                           6 7 1 0 0 0 0;
+                           5 6 7 7 0 0 0;
+                           1 1 6 2 6 0 0;
+                           2 3 3 3 2 2 0;
+                           3 2 2 6 3 3 3])
+
+rmatr2 = Copulas.RVMatrix([7 0 0 0 0 0 0;
+                           4 4 0 0 0 0 0;
+                           5 6 6 0 0 0 0;
+                           1 5 5 5 0 0 0;
+                           2 1 1 1 1 0 0;
+                           3 2 2 3 3 3 0;
+                           6 3 3 2 2 2 2])
+
+vn1 = convert(Copulas.Vine, rmatr1)
+vn2 = convert(Copulas.Vine, rmatr2)
+
+@test Copulas.dg(vn1) == Copulas.dg(vn2)
