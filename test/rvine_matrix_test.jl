@@ -20,7 +20,7 @@ kk = [2 0 4; 2 3 0; 3 2 2]
 @test_throws Exception Copulas.RVMatrix(kk)
 
 kk = [1 0 0; 2 3 0; 3 2 2]
-RVMatrix(kk)
+Copulas.RVMatrix(kk)
 
 #########################
 ## columnSubsets tests ##

@@ -72,10 +72,10 @@ function convert(::Type{RVMatrix}, vn::Vine)
 
         ## eliminate root from each tree
         for jj=1:length(paths)
-            for ll=1:length(paths[jj].paths)
-                if !isempty(paths[jj].paths[ll])
-                    if paths[jj].paths[ll][end] == rt
-                        pop!(paths[jj].paths[ll])
+            for ll=1:length(dg(paths[jj]))
+                if !isempty(dg(paths[jj])[ll])
+                    if dg(paths[jj])[ll][end] == rt
+                        pop!(dg(paths[jj])[ll])
                     end
                 end
             end
@@ -87,7 +87,7 @@ end
 
 function convert(::Type{Copulas.Vine}, rmat::Copulas.RVMatrix)
     
-    rmatr = rmat.matrix
+    rmatr = dg(rmat)
     nVars = size(rmatr, 1)
     ## paths = Array(Array{Array{Int, 1}, 1}, nVars)
     paths = Array(Copulas.CTreePaths, nVars);
@@ -127,7 +127,7 @@ function convert(::Type{Copulas.Vine}, rmat::Copulas.RVMatrix)
     vnParRef = Array(Int, nVars, nVars)
     for ii=1:nVars
         kk = convert(Copulas.CTreeParRef, paths[ii])
-        vnParRef[:, ii] = kk.tree
+        vnParRef[:, ii] = dg(kk)
     end
     vn = Copulas.Vine(vnParRef)
     return vn
@@ -158,7 +158,14 @@ path length.
 """->
 function getLongestPath(ctr::Copulas.CTreePaths)
     maxDep = Copulas.maxDepth(ctr)
-    isMaxDep = Bool[length(path) == maxDep for path in ctr.paths]
+    isMaxDep = Bool[length(path) == maxDep for path in dg(ctr)]
     ind = find(isMaxDep)[1]
-    return ctr.paths[ind]
+    return dg(ctr)[ind]
+end
+
+@doc doc"""
+Delegate functions to single field of composite type.
+"""->
+function dg(rvm::RVMatrix)
+    return rvm.matrix
 end

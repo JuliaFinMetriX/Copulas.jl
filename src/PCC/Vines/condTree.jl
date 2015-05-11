@@ -53,6 +53,16 @@ function CTreePaths(rt::Int, paths...)
     return CTreePaths(rt, ps)
 end
 
+## dg function
+##------------
+
+@doc doc"""
+Delegate functions to single field of composite type.
+"""->
+function dg(rt::CTreePaths)
+    return rt.paths
+end
+
 
 ####################
 ## CondTreeParRef ##
@@ -65,6 +75,16 @@ nodes have parent -1.
 """->
 type CTreeParRef <: AbstractCTree
     tree::Array{Int, 1}
+end
+
+## dg function
+##------------
+
+@doc doc"""
+Delegate functions to single field of composite type.
+"""->
+function dg(rt::CTreeParRef)
+    return rt.tree
 end
 
 

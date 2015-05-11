@@ -73,6 +73,13 @@ function Vine(trs::Array{CTreeParRef, 1})
     return Vine(parNot, [1:nTrees])
 end
 
+## dg function
+##------------
+
+function dg(vn::Vine)
+    return dg.trees
+end
+
 #############
 ## display ##
 #############
