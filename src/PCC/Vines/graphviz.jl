@@ -8,6 +8,18 @@
 ## all three output ways make use of the same core: Julia code that
 ## automatically creates dot code
 
+## chart consists of:
+## - cmd (dot, neato)
+## - dot code
+
+## dot code depends on:
+## - data type
+## - chart name (trees, graph)
+
+## cmd depends on:
+## - data type
+## - chart name
+
 function toConsole(obj::Any; chrt="default", args...)
     stdin = IOBuffer()
     toGviz(obj, stdin, chrt; args...)
@@ -17,7 +29,8 @@ end
 @doc doc"""
 Plot tree in x11 window.
 """->
-function viz(obj::Any; cmd="dot", chrt="default", args...)
+function viz(obj::Any; chrt="default", args...)
+    cmd = getCmd(obj, chrt)
     stdin, proc = open(`$cmd -Tx11`, "w")
     toGviz(obj, stdin, chrt; args...)
     close(stdin)
@@ -29,9 +42,9 @@ Render chart to output file.
 function render(obj::Any,
                 fmt::String,
                 fname::String;
-                cmd="dot",
                 chrt="default",
                 args...)
+    cmd = getCmd(obj, chrt)
     stdin, proc = open(`$cmd -T$fmt -o $fname.$fmt`, "w")
     toGviz(obj, stdin, chrt; args...)
     close(stdin)
@@ -40,10 +53,10 @@ end
 @doc doc"""
 Render chart to default output file.
 """->
-function render(obj::Any; chrt="default", cmd="dot", args...)
+function render(obj::Any; chrt="default", args...)
     ## create tmp file
     fname = tempname()
-    render(obj, "svg", fname; chrt=chrt, cmd=cmd, args...)
+    render(obj, "svg", fname; chrt=chrt, args...)
     return string(fname, ".", "svg")
 end
 
@@ -103,6 +116,18 @@ function toGviz(tr::AbstractCTree, stream::IO; args...)
     return toGviz(trPar, stream; args...)
 end
 
+function getCmd(tr::CTreeParRef, chrt::String)
+    if chrt == "default"
+        return "dot"
+    end
+end
+
+function getCmd(tr::AbstractCTree, chrt::String)
+    if chrt == "default"
+        return "dot"
+    end
+end
+
 ###############
 ## vine plot ##
 ###############
@@ -117,6 +142,14 @@ function toGviz(vn::Copulas.Vine,
         toGviz_graph(vn, stream; args...)
     else
         toGviz_trees(vn, stream; args...)
+    end
+end
+
+function getCmd(vn::Copulas.Vine, chrt::String)
+    if chrt == "default"
+        return "neato"
+    else
+        return "dot"
     end
 end
 
@@ -151,6 +184,10 @@ end
 ## conditioning tree visualization
 ##--------------------------------
 
+@doc doc"""
+Emph1 will emphasize root nodes and other nodes, emph2 will only
+emphasize root nodes.
+"""->
 function toGviz_trees(vn::Copulas.Vine,
                       stream::IO;
                       shape="circle",
@@ -159,7 +196,13 @@ function toGviz_trees(vn::Copulas.Vine,
                       emphFontColor1="black",
                       emphShape1="circle",
                       emph2=[], emphFillColor2="lawngreen",
-                      emphShape2="circle")
+                      emphFontColor2="black",
+                      emphShape2="circle",
+                      rootEmph=[],
+                      rootEmphFillColor1="lawngreen",
+                      rootEmphFontColor1="black",
+                      rootEmphShape1="circle",
+                      )
     nVars = size(vn.trees, 1)
     write(stream, "digraph {\n")
     write(stream, "node [shape=$shape];\n")
@@ -172,7 +215,12 @@ function toGviz_trees(vn::Copulas.Vine,
             write(stream, "\"$rootVar in $rootVar\"
 [label=\"$rootVar\"; color=$emphFillColor2; fontcolor=$emphFontColor2;
 style=filled; fillcolor=$emphFillColor2; shape=$emphShape2];\n")
+        elseif rootVar in rootEmph
+            write(stream, "\"$rootVar in $rootVar\"
+[label=\"$rootVar\"; color=$rootEmphFillColor1; fontcolor=$rootEmphFontColor1;
+style=filled; fillcolor=$rootEmphFillColor1; shape=$rootEmphShape1];\n")
         else
+
             write(stream, "\"$rootVar in $rootVar\" [label=\"$rootVar\"];\n")
         end
         for ii=1:nVars
@@ -180,11 +228,11 @@ style=filled; fillcolor=$emphFillColor2; shape=$emphShape2];\n")
             if parNode > 0
                 if ii in emph1
                     write(stream, "\"$ii in $rootVar\"
-[label=\"$ii\"; color=$emphFillColor1; fontcolor=$emphFontColor1; style=filled; fillcolor=$emphFillColor1; shape=$emphShape1];\n")
+[label=\"$ii\"; color=$emphFillColor1; fontcolor=$emphFontColor1;
+style=filled; fillcolor=$emphFillColor1; shape=$emphShape1];\n")
                 elseif ii in emph2
                     write(stream, "\"$ii in $rootVar\"
-[label=\"$ii\"; color=$emphFillColor2; fontcolor=$emphFontColor2;
-style=filled; fillcolor=$emphFillColor2; shape=$emphShape2];\n")
+[label=\"$ii\"; color=$emphFillColor2; fontcolor=$emphFontColor2; style=filled; fillcolor=$emphFillColor2; shape=$emphShape2];\n")
                 else
                     write(stream, "\"$ii in $rootVar\" [label=\"$ii\"];\n")
                 end
