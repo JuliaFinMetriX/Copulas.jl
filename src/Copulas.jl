@@ -76,6 +76,7 @@ Tawn2PC_Cpp,
 TawnPC_Cpp,
 tPC_Cpp,
 # functions
+PITMatrix,
 Tree,
 Vine,
 Raw_html,
@@ -89,6 +90,7 @@ trees2vine,
 vine2trees,
 cdf,
 checkSameLength,
+dg,
 getVineCPPId,
 getCopNam,
 getCopType,
@@ -117,6 +119,7 @@ include("PCC/Vines/rvine_matrix.jl")
 include("PCC/Vines/graphviz.jl")
 include("PCC/Vines/utils.jl")
 include("PCC/Vines/vineConstruction.jl")
+include("PCC/Vines/pitmatrix.jl")
 include("PCC/PCC.jl")
 include("testFuncs.jl")
 include("testcases.jl")

@@ -11,7 +11,8 @@ tests = [
          "pcc_test.jl",
          "vineConstruction_test.jl",
          "ParamPC_tests.jl",
-         "ParamPC_Cpp_tests.jl"
+         "ParamPC_Cpp_tests.jl",
+         "pitmatrix_test.jl"
          ]
 
 println("Running copula tests:")
