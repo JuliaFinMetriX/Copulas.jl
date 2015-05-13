@@ -3,8 +3,6 @@ module TestRVineMatrix
 using Copulas
 using Base.Test
 
-include("/home/chris/research/julia/Copulas/src/Copulas.jl")
-
 #######################
 ## constructor tests ##
 #######################
@@ -108,3 +106,5 @@ vn1 = convert(Copulas.Vine, rmatr1)
 vn2 = convert(Copulas.Vine, rmatr2)
 
 @test Copulas.dg(vn1) == Copulas.dg(vn2)
+
+end

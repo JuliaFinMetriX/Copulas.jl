@@ -4,7 +4,7 @@
 
 
 const VineCppPath = joinpath(Pkg.dir("Copulas"),
-                             "src/VineCopulaCPP/libVineCPP.so.1.0")
+                             "src/VineCopulaCPP/libVineCopulaCPP.so.1.0")
 
 pdfName = :_Z13PairCopulaPDFiPKdPdS1_S1_j
 cdfName = :_Z13PairCopulaCDFiPKdPdS1_S1_j
