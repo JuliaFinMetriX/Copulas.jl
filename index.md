@@ -31,7 +31,7 @@ combination of existing pair copulas, called mixture copulas, and is
 implemented as type `MixPC`.
 
 Note that we face a reflexive structure at this point: `ModPC` and
-`MixPC` types both are build on pair copulas, but they are pair
+`MixPC` types both are built on pair copulas, but they are pair
 copulas themselves, too.
 
 Parametric pair copulas build the very core of this package, as they
@@ -39,15 +39,17 @@ are required both as starting point for copula modifications and for
 pair copula constructions. However, most parametric copula families
 are not yet implemented in core Julia yet. Hence, in the meantime,
 there exist two different representations of parametric copulas:
-`ParamPC`, which is a pure Julia implementation, and `ParamPC_Cpp`,
-which makes use of the C++ copula package `VineCopulaCPP`.
+`ParamPC`, which is a pure Julia implementation for a few parametric
+families, and `ParamPC_Cpp`, which makes use of the C++ copula package
+`VineCopulaCPP`.
 
 Every abstraction on top of parametric copulas, however, is written in
 pure Julia.
 
 ![Type hierarchy](pics/cop_type_hierarchy.svg)
 
-Possible extensions:
+Possible extensions in the type hierarchy are:
+
 - multivariate parametric copulas
 - multivariate non-parametric copulas
 - bivariate non-parametric copulas
@@ -59,15 +61,17 @@ Pair copula construction: related types
 ![PCC](pics/vine_types.svg)
 
 
-Pair copula type hierarchy
---------------------------
-
-![Type hierarchy](pics/type_graph.svg)
-
 Copula modifications
 --------------------
 
-![Copula modifications](pics/copula_modifiers.svg)
+A copula modification consists of a given pair copula together with
+some modification operation. The most prominent such modifications are
+rotations and reflections.
+
+As there has not yet evolved any standard of whether rotations are
+defined clockwise or counter-clockwise, both ways are implemented.
+
+![Copula modifications](pics/cop_modifications.svg)
 
 Copula theory
 -------------

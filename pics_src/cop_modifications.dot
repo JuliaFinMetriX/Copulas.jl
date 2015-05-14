@@ -1,0 +1,37 @@
+digraph G {
+
+node [shape=Mrecord; fixedsize=true; height=1.3; width=2.5];
+
+modpc [label="{ModPC | - cop::PairCop\l- mod::PCModification\l}"];
+
+pcmod [label="{PCModification | abstract}"];
+
+rot [label="{Rotation | abstract}"; style=filled; fillcolor="lightblue"];
+refl [label="{Reflection | abstract}"; fillcolor="greenyellow"; style=filled];
+
+node [style=filled; fillcolor="lightblue"];
+
+cwrot [label="{CWRotation | abstract}"];
+countrot [label="{CounterCWRotation | abstract}"];
+
+rot90 [label="{Rot90 | - description::String\l- degrees::Int\l}"];
+rot180 [label="{Rot180 | - description::String\l- degrees::Int\l}"];
+
+rot90ccw [label="{Rot90CCW | - description::String\l- degrees::Int\l}"];
+rot180ccw [label="{Rot180CCW | - description::String\l- degrees::Int\l}"];
+
+modpc -> pcmod [style=invis];
+
+pcmod -> rot;
+pcmod -> refl;
+
+rot -> cwrot;
+rot -> countrot;
+
+cwrot -> rot90;
+cwrot -> rot180;
+
+countrot -> rot90ccw;
+countrot -> rot180ccw;
+
+}
