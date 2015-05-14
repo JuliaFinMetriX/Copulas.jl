@@ -18,6 +18,7 @@ before_install:
   - sudo apt-get -y install libboost-all-dev
   - sudo apt-get -y install libgomp1
   - sudo apt-get -y install gfortran
+  - sudo apt-get -y install graphviz
   - cd $OLD_DIR
   
 script:
