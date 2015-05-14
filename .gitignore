@@ -1,0 +1,21 @@
+# Vim temporary files
+*~
+
+# Compiled Object files
+*.o
+
+# Downloaded file from Alan Genz
+mvtdstpack.f
+
+# SetSeed Programm
+SetSeed
+
+# Seed.dat
+Seed.dat
+
+# VineCopulaCPP_PathToBoundsAndSeed.hpp
+VineCopulaCPP_PathToBoundsAndSeed.hpp
+
+# bounds.txt
+bounds.txt
+
