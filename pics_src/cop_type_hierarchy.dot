@@ -1,0 +1,55 @@
+digraph G {
+
+node [shape=Mrecord; fixedsize=true; height=1.3; width=2.5];
+
+cop [label="{Copula | abstract}"];
+
+paircop [label="{PairCop | abstract}"; fillcolor="lightblue"; style=filled];
+
+pcc [label="{PCC | - pccCops::Array\{PairCop,1\}\l- vine::Vine\l- funcs::Array\{Function,1\}\l}"];
+
+node [style=filled; fillcolor="lightblue"];
+
+mixpc [label="{MixPC | - cops::Array\{PairCop,1\}\l- wgts::FloatVec\l}"];
+modpc [label="{ModPC | - cop::PairCop\l- mod::PCModification\l}"];
+
+node [fillcolor="greenyellow"; style=filled];
+
+paramcop [label="{ParamPC | abstract}"];
+paramcop_cpp [label="{ParamPC_Cpp | abstract}"];
+abstractparamcop [label="{AbstractParamPC | abstract}"];
+
+gauss_pc [label="{GaussianPC | - rho::Float\l}"];
+gumbel_pc [label="{GumbelPC | - theta::Float\l}"];
+clayton_pc [label="{ClaytonPC | - theta::Float\l}"];
+indep_pc [label="{Indep | }"];
+
+gauss_pc_cpp [label="{GaussianPC_Cpp | - params::Array\{Float,1\}\l}"];
+gumbel_pc_cpp [label="{GumbelPC_Cpp | - params::Array\{Float,1\}\l}"];
+clayton_pc_cpp [label="{ClaytonPC_Cpp | - params::Array\{Float,1\}\l}"];
+indep_pc_cpp [label="{Indep_Cpp | - params::Array\{Float,1\}\l}"];
+
+
+cop -> pcc;
+cop -> paircop;
+
+paircop -> mixpc;
+paircop -> modpc;
+paircop -> abstractparamcop [minlen=2];
+
+abstractparamcop -> paramcop;
+abstractparamcop -> paramcop_cpp;
+
+paramcop -> gauss_pc;
+paramcop -> gumbel_pc [minlen=2];
+paramcop -> clayton_pc [minlen=3];
+paramcop -> indep_pc [minlen=2];
+
+paramcop_cpp -> gauss_pc_cpp;
+paramcop_cpp -> gumbel_pc_cpp [minlen=3];
+paramcop_cpp -> clayton_pc_cpp [minlen=2];
+paramcop_cpp -> indep_pc_cpp;
+
+
+
+}
