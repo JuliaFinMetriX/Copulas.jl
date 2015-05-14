@@ -58,6 +58,21 @@ Possible extensions in the type hierarchy are:
 Pair copula construction: related types
 ---------------------------------------
 
+A pair copula basically consists of two things: a description of the
+density decomposition (called vine), and copulas to capture the
+dependency between individual pairwise relations.
+
+The conventional way to represent a density decomposition is through
+an R-Vine matrix. However, a vine evenly could be described as an
+array of individual **conditioning trees**, one for each variable.
+
+There are two different representations of conditioning trees: types
+`CTreePaths` and `CTreeParRef`. For reasons of efficiency, however, a
+`Vine` is not stored as `Array` of `AbstractCTree`, but as a single
+two-dimensional matrix, where each column is a conditioning tree in
+parent referencing notation.
+
+
 ![PCC](pics/vine_types.svg)
 
 

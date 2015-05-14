@@ -1,0 +1,27 @@
+digraph G {
+
+node [shape=Mrecord; fixedsize=true; height=1.3; width=2.5];
+
+pcc [label="{PCC | - pccCops::Array\{PairCop,1\}\l- vine::Vine\l- funcs::Array\{Function,1\}\l}"];
+
+vine [label="{Vine | - trees::Array\{Int,2\}}"; fillcolor="lightblue"; style=filled]
+
+pitmatr [label="{PITMatrix | - data::Array\{Float, 3\}\l}"]
+
+rvmatr [label="{RVMatrix | - matrix::Array\{Int, 2\}\l}"]
+
+abstractctree [label="{AbstractCTree | abstract }"; fillcolor="lightblue"; style=filled]
+
+ctreepaths [label="{CTreePaths | - root::Int\l- paths::IntArrays\l}"; fillcolor="lightblue"; style=filled]
+ctreeparref [label="{CTreeParRef | - tree::Array\{Int,1\}\l}"; fillcolor="lightblue"; style=filled]
+
+pcc -> vine [style=dotted];
+
+pcc -> rvmatr [style=dotted];
+
+vine -> abstractctree [style=dotted];
+
+abstractctree -> ctreepaths;
+abstractctree -> ctreeparref;
+
+}
