@@ -111,9 +111,9 @@ function toGviz(tr::CTreeParRef,
     write(stream, "}")
 end
 
-function toGviz(tr::AbstractCTree, stream::IO; args...)
+function toGviz(tr::AbstractCTree, stream::IO, chrt::String; args...)
     trPar = convert(CTreeParRef, tr)
-    return toGviz(trPar, stream; args...)
+    return toGviz(trPar, stream, chrt; args...)
 end
 
 function getCmd(tr::CTreeParRef, chrt::String)

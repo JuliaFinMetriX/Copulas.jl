@@ -15,9 +15,7 @@ typealias IntArrays Array{Array{Int, 1}, 1}
 ####################
 
 abstract Copula
-abstract PccCop <: Copula
-abstract PairCop <: PccCop
-abstract VarPairCop <: PccCop
+abstract PairCop <: Copula
 
 # parametric pair copulas
 abstract AbstractParamPC <: PairCop
@@ -27,12 +25,20 @@ abstract ParamPC_Cpp <: AbstractParamPC # VineCopulaCPP
 
 # package code goes here
 export # copula types
-PairCop,
+AbstractCTree,
 AbstractParamPC,
+Copula,
+CTreeParRef,
+CTreePaths,
+MixPC,
+ModPC,
+PairCop,
 ParamPC,
 ParamPC_Cpp,
-ModPC,
-MixPC,
+PCC,
+PITMatrix,
+Raw_html,
+Vine,
 # parametric copula types
 IndepPC,
 AMHPC,
@@ -76,10 +82,6 @@ Tawn2PC_Cpp,
 TawnPC_Cpp,
 tPC_Cpp,
 # functions
-PITMatrix,
-Tree,
-Vine,
-Raw_html,
 allPathVals,
 allVals,
 condSetChk,

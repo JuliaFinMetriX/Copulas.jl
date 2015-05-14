@@ -107,10 +107,6 @@ end
 ## attach! ##
 #############
 
-#############
-## attach! ##
-#############
-
 ## attach to end of path
 tr = Copulas.CTreePaths(1, [2 3], [4])
 Copulas.attach!(tr, 5, [2,3])

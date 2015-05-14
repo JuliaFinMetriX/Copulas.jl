@@ -33,6 +33,14 @@ kk = [2 0 0; 2 3 0; 3 2 2]
 kk = [1 0 0; 2 3 0; 3 2 2]
 @test Copulas.chkColumnSubsets(kk)
 
+########
+## dg ##
+########
+
+kk = [1 0 0; 2 3 0; 3 2 2]
+rvm = Copulas.RVMatrix(kk)
+@test Copulas.dg(rvm) == kk
+
 ###############
 ## allExcept ##
 ###############

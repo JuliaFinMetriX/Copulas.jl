@@ -2,10 +2,10 @@ using Copulas
 using Base.Test
 
 tests = [
-         ## "utils_test.jl",
-         ## "paircop_test.jl",
-         ## "condTree_test.jl",
-         ## "graphviz_test.jl",
+         "utils_test.jl",
+         "paircop_test.jl",
+         "condTree_test.jl",
+         "graphviz_test.jl",
          "vine_test.jl",
          "rvine_matrix_test.jl",
          "pcc_test.jl",
