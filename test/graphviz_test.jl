@@ -68,7 +68,7 @@ chrt = JFinM_Charts.chart(Copulas.VineGraphChart,
                           weights=["1", "0"])
 Copulas.viz(vn, chrt)
 
-vn = Copulas.testvine(8)
+vn = Copulas.testvine(2)
 Copulas.viz(vn, Copulas.VineGraphChart())
 
 ## Copulas.viz(tr)
