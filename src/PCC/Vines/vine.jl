@@ -152,7 +152,8 @@ function getSimSequences(vn::Vine, condSet::Array{Int, 1})
     ## find possible simulation variable sequences
 
     ## transform vine to array of trees
-    trees = vine2trees(vn)
+    nVars = size(dg(vn), 1)
+    trees = CTreeParRef[CTreeParRef(dg(vn)[:, ii]) for ii=1:nVars]
 
     ## get remaining variables to be simulated
     nVars = size(vn.trees, 1)

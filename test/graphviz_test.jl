@@ -41,7 +41,7 @@ vn = Copulas.testvine(3)
 
 gviz = Copulas.GViz(vn, JFinM_Charts.chart(Copulas.VineTreesChart,
                                    emph1 = [1, 3]))
-render(gviz)
+Copulas.render(gviz)
 
 ####################
 ## VineGraphChart ##
@@ -49,7 +49,7 @@ render(gviz)
 
 vn = Copulas.testvine(3)
 gviz = Copulas.GViz(vn, JFinM_Charts.chart(Copulas.VineGraphChart))
-render(gviz)
+Copulas.render(gviz)
 
 chrt = JFinM_Charts.chart(Copulas.VineGraphChart,
                           maxLayer=3,
@@ -59,7 +59,7 @@ chrt = JFinM_Charts.chart(Copulas.VineGraphChart,
                           weights=["1", "1", "1"])
 
 
-render(Copulas.GViz(vn, chrt))
+Copulas.render(Copulas.GViz(vn, chrt))
 
 
 chrt = JFinM_Charts.chart(Copulas.VineGraphChart,
