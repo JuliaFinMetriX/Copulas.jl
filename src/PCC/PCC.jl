@@ -8,7 +8,7 @@ efficiency.
 ## Copulas
 
 Involved copulas are stored as `Array` for memory efficiency. However,
-upper level access functions treat the array of copulas is if they
+upper level access functions treat the array of copulas as if they
 were stored in a upper triangular matrix, with copula C_{ij|klm}
 accessible through indices i and j. Thereby, i always is smaller than
 j! In order to switch between triangular notation and array

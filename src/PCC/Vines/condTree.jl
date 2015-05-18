@@ -35,9 +35,6 @@ type CTreePaths <: AbstractCTree
     end
 end
 
-## only temporary
-typealias Tree CTreePaths
-
 ##################
 ## constructors ##
 ##################
@@ -384,7 +381,7 @@ function allNodes(tr::CTreePaths)
 end
 
 function allNodes(tr::CTreeParRef)
-    return sum(tr.tree >= 0)
+    return find(tr.tree .>= 0)
 end
 
 function allNodes(tr::AbstractCTree)
@@ -402,7 +399,7 @@ function allPathNodes(tr::CTreePaths)
 end
 
 function allPathNodes(tr::CTreeParRef)
-    return sum(tr.tree > 0)
+    return find(tr.tree .> 0)
 end
 
 function allPathNodes(tr::AbstractCTree)
@@ -410,6 +407,17 @@ function allPathNodes(tr::AbstractCTree)
     return allPathNodes(trPar)
 end
 
+
+## getRoot
+##--------
+
+function getRoot(tr::CTreeParRef)
+    return find(dg(tr) .== 0)[1]
+end
+
+function getRoot(tr::CTreePaths)
+    return tr.root
+end
 
 #############
 ## condSet ##
@@ -431,7 +439,7 @@ function condSetChk(arr::Array{Int, 1}, tr::CTreePaths)
     ## does conditional set occur at beginning of some path?
     nNodes = length(arr)
     
-    nPaths = length(tr)
+    nPaths = width(tr)
     for ii=1:nPaths
         if length(tr[ii]) >= nNodes
             if issubset(arr, tr[ii][1:nNodes])
@@ -444,7 +452,7 @@ end
 
 function condSetChk(arr::Array{Int, 1}, tr::AbstractCTree)
     trPaths = convert(CTreePaths, tr)
-    return condSetChk(trPaths)
+    return condSetChk(arr, trPaths)
 end
 
 #############

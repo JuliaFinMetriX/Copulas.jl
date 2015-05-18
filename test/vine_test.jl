@@ -60,11 +60,11 @@ tr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
 path = Copulas.getPathToRoot(tr, 6)
 @test path == [5, 4]
 
-tr = Copulas.Tree(3, Array{Int, 1}[[4, 6],[2, 1], [2, 5]])
+tr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 6],[2, 1], [2, 5]])
 path = Copulas.getPathToRoot(tr, 2)
 @test path == []
 
-tr = Copulas.Tree(3, Array{Int, 1}[[2, 1, 4],[2, 1, 5], [2, 6]])
+tr = Copulas.CTreePaths(3, Array{Int, 1}[[2, 1, 4],[2, 1, 5], [2, 6]])
 path = Copulas.getPathToRoot(tr, 1)
 @test path == [2]
 
