@@ -151,6 +151,10 @@ function convert(::Type{CTreePaths}, tr::Array{Int, 1})
     return convert(CTreePaths, trPar)
 end
 
+function convert(::Type{CTreeParRef}, tr::Array{Int, 1})
+    return CTreeParRef(tr)
+end
+
 ## convert to CTreeParRef
 ##-----------------------
 
@@ -453,6 +457,71 @@ end
 function condSetChk(arr::Array{Int, 1}, tr::AbstractCTree)
     trPaths = convert(CTreePaths, tr)
     return condSetChk(arr, trPaths)
+end
+
+## findAndSortCondSet
+##-------------------
+
+@doc doc"""
+Find a given conditioning set in the tree of a variable given in
+parent notation. If the conditioning set occurs, it will be returned
+with the same sorting as it appears in the tree: the first entry is
+directly connected to the root node. If the conditioning set is not
+found, the function throws an error.
+
+The algorithm first translates the tree in parent notation into a
+`Tree`, which might be unnecessary and time consuming.
+
+And alternative would be to search for the conditioning set directly
+in parent notation. A conditioning set of length 3 could be found as a
+sequence that arrives at the root node in the 4th step, with all steps
+including nodes that are part of the conditioning set.
+"""->
+function findAndSortCondSet(tr::CTreeParRef,
+                     condSet::Array{Int, 1})
+    trPar = convert(CTreePaths, tr)
+    
+    nNodes = length(condSet)
+    
+    nPaths = width(trPar)
+    for ii=1:nPaths
+        if length(trPar[ii]) >= nNodes
+            if issubset(condSet, trPar[ii][1:nNodes])
+                return trPar[ii][1:nNodes]
+            end
+        end
+    end
+    error("Conditional set does not occur.")
+end
+
+## getPathToRoot
+##--------------
+
+@doc doc"""
+For tree given in parent notation, get full path from variable `var`
+to root node. Path does neither include `var` nor `root`. The first
+element is connected to `root`, the last one to `var`.
+"""->
+function getPathToRoot(tr::CTreeParRef, var::Int)
+    parNot = tr.tree
+    rootNode = find(parNot .== 0)[1]
+    notAtRoot = true
+    path = Int[]
+    currVar = var
+    while notAtRoot
+        currVar = parNot[currVar]
+        if currVar == rootNode
+            notAtRoot = false
+        else
+            push!(path, currVar)
+        end
+    end
+    return flipud(path)
+end
+
+function getPathToRoot(tr::AbstractCTree, var::Int)
+    trPar = convert(CTreeParRef, tr)
+    return getPathToRoot(trPar, var)
 end
 
 #############

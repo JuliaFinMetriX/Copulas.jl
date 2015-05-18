@@ -221,7 +221,7 @@ function mandatoryEdges(possibleEdges::Array{CondEdge, 1},
 end
 
 ## tests exist
-function incomplTrees(trs::Array{CTreeParRef, 1})
+function incomplTrees(trs::Array{CTreePaths, 1})
     ## only incomplete trees need to be considered
     ## Input:
     ## 	trs			nx1 Array of Trees
@@ -293,7 +293,7 @@ end
 
 ## for given layer, find all matches in tree array
 ## tests exist
-function findPairMatch(trs::Array{CTreeParRef, 1}, nrLayer::Int,
+function findPairMatch(trs::Array{CTreePaths, 1}, nrLayer::Int,
                        verticesToBeLinked::Array{Int, 1})
     ## constraints:
     ## - individual trees are sorted: tree at index ii has root ii
@@ -325,7 +325,7 @@ function findPairMatch(trs::Array{CTreeParRef, 1}, nrLayer::Int,
     return matchingEdges
 end
 
-function unlinkedVars(tr::CTreeParRef, nVars::Int)
+function unlinkedVars(tr::AbstractCTree, nVars::Int)
     ## only variables not yet linked need to be tested
     return setdiff([1:nVars], allNodes(tr))
 end

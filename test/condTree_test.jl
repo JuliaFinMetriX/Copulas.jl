@@ -103,6 +103,52 @@ for tr in allTrees
     @test Copulas.allPathNodes(tr1) == [1, 2, 3, 4, 5, 6, 7, 8]
 end
 
+#######################
+## conditioning sets ##
+#######################
+
+## condSetChk
+##-----------
+
+tr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
+Copulas.viz(tr)
+
+@test Copulas.condSetChk([4, 5], tr)
+@test Copulas.condSetChk([1, 2], tr)
+@test Copulas.condSetChk([2, 1], tr)
+
+tr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
+tr = convert(Copulas.CTreeParRef, tr)
+@test !Copulas.condSetChk([2, 4], tr)
+
+## findAndSortCondSet
+##-------------------
+
+tr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
+tr = convert(Copulas.CTreeParRef, tr)
+
+@test [2; 1] == Copulas.findAndSortCondSet(tr, [2, 1])
+@test [4; 5] == Copulas.findAndSortCondSet(tr, [5, 4])
+@test_throws Exception Copulas.findAndSortCondSet(tr, [4, 6])
+
+## getPathToRoot
+##--------------
+
+tr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
+path = Copulas.getPathToRoot(tr, 6)
+@test path == [4, 5]
+
+tr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 6],[2, 1], [2, 5]])
+path = Copulas.getPathToRoot(tr, 2)
+@test path == []
+
+tr = Copulas.CTreePaths(3, Array{Int, 1}[[2, 1, 4],[2, 1, 5], [2, 6]])
+path = Copulas.getPathToRoot(tr, 1)
+@test path == [2]
+
+path = Copulas.getPathToRoot(tr, 5)
+@test path == [2, 1]
+
 #############
 ## attach! ##
 #############

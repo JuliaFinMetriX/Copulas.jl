@@ -8,8 +8,8 @@ tests = [
          "graphviz_test.jl",
          "vine_test.jl",
          "rvine_matrix_test.jl",
-         "pcc_test.jl",
-         "vineConstruction_test.jl",
+         ## "pcc_test.jl",
+         ## "vineConstruction_test.jl",
          "ParamPC_tests.jl",
          "ParamPC_Cpp_tests.jl",
          "pitmatrix_test.jl"

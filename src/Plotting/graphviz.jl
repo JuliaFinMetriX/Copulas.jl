@@ -100,12 +100,32 @@ function render(data::Any,
     render(gviz)
 end
 
-#############################
-## default render settings ##
-#############################
+#####################################
+## default render and viz settings ##
+#####################################
 
 ## conditioning tree
+function viz(tr::CTreeParRef)
+    viz(tr, CTreeChart())
+end
+
 function render(tr::CTreeParRef)
     render(tr, CTreeChart())
 end
 
+function viz(tr::CTreePaths)
+    viz(tr, CTreeChart())
+end
+
+function render(tr::CTreePaths)
+    render(tr, CTreeChart())
+end
+
+## vine
+function viz(vn::Vine)
+    viz(vn, VineTreesChart())
+end
+
+function render(vn::Vine)
+    render(vn, VineTreesChart())
+end

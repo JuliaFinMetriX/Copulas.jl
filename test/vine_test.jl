@@ -7,8 +7,6 @@ using Base.Test
 ##-------------
 
 Copulas.Vine([0 2; 1 0])
-Copulas.Vine([0 2; 1 0], ["var1", "var2"])
-Copulas.Vine([0 2; 1 0], [:var1, :var2])
 @test_throws Exception Copulas.Vine([0 2; 1 0; 3 3])
 
 ## display functions
@@ -23,6 +21,10 @@ display(Copulas.Vine([0 2; 1 0]))
 dVine = Copulas.testvine(1)
 tPexp = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
 @test tPexp == Copulas.convert(Copulas.CTreePaths, dVine.trees[:, 3])
+
+ctr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
+tPexp = convert(Copulas.CTreeParRef, ctr)
+@test tPexp == Copulas.convert(Copulas.CTreeParRef, dVine.trees[:, 3])
 
 ## create vine with parent notation
 vn = Copulas.testvine(2)
@@ -49,27 +51,44 @@ expVec = [-1, 3, 0, -1, 2, 3]
 tr2 = Copulas.convert(Copulas.CTreePaths, parNotVec)
 @test tr == tr2
 
+##########################
+## simulation sequences ##
+##########################
+
+## test getting simulation sequences
+vn = Copulas.testvine(2)
+kk = Copulas.getSimSequences(vn, [2, 3, 4, 5])
+@test kk == Array{Int, 1}[[2, 3, 4, 5, 1, 6], [2, 3, 4, 5, 6, 1]]
+
+vn = Copulas.Vine([0 2 3;
+                   1 0 1;
+                   1 1 0])
+
+expSeqs = Array{Int, 1}[[1, 2, 3];
+                        [1, 3, 2];
+                        [2, 1, 3];
+                        [3, 1, 2]]
+
+kk = Copulas.getSimSequences(vn)
+@test kk == expSeqs
+
+expAvg = [1.5;
+          9/4;
+          9/4]
+
+## test average simulation sequence position
+@test expAvg == Copulas.avgSimSequPosition(kk)
+
+## test linkLayers
+expOut = [0 1 1;
+          1 0 2;
+          1 2 0]
+          
+@test expOut == Copulas.linkLayers(vn)
+
 #######################
 ## conditioning sets ##
 #######################
-
-## getPathToRoot
-##--------------
-
-tr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
-path = Copulas.getPathToRoot(tr, 6)
-@test path == [5, 4]
-
-tr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 6],[2, 1], [2, 5]])
-path = Copulas.getPathToRoot(tr, 2)
-@test path == []
-
-tr = Copulas.CTreePaths(3, Array{Int, 1}[[2, 1, 4],[2, 1, 5], [2, 6]])
-path = Copulas.getPathToRoot(tr, 1)
-@test path == [2]
-
-path = Copulas.getPathToRoot(tr, 5)
-@test path == [1, 2]
 
 ## getCondSet
 ##-----------

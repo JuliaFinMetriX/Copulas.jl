@@ -53,3 +53,7 @@ function GViz(tr::CTreeParRef, chrt::CTreeChart)
     dotCode = string(dotCode, "}")
     return GViz("CTreeChart", "dot", dotCode)
 end
+
+function GViz(tr::CTreePaths, chrt::CTreeChart)
+    return GViz(convert(CTreeParRef, tr), chrt)
+end

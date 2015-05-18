@@ -35,9 +35,9 @@ calculate the actual parameters of `varCop` inside of the function:
 """->
 type PCC{T} <: Copula
     pccCops::Array{T, 1}
-    vine::Vine{Int}
+    vine::Vine
 
-    function PCC(cops::Array{T, 1}, vn::Vine{Int})
+    function PCC(cops::Array{T, 1}, vn::Vine)
         ## test sizes
         nVars = size(vn.trees, 2)
         nCops = sum((nVars-1):-1:1)
@@ -48,11 +48,11 @@ type PCC{T} <: Copula
     end
 end
 
-function PCC{T}(cops::Array{T, 1}, vn::Vine{Int})
+function PCC{T}(cops::Array{T, 1}, vn::Vine)
     return PCC{T}(cops, vn)
 end
 
-function PCC(vn::Vine{Int})
+function PCC(vn::Vine)
     # fill with independence copulas
     nVars = size(vn.trees, 2)
     nCops = sum((nVars-1):-1:1)
