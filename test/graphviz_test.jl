@@ -2,6 +2,7 @@ module TestGraphviz
 
 using Copulas
 using Base.Test
+using JFinM_Charts
 
 ################
 ## CTreeChart ##
