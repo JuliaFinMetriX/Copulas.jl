@@ -13,6 +13,16 @@ type GViz
     code::String
 end
 
+import Base.writemime
+function writemime(io::IO,
+                   ::MIME"text/html",
+                   gviz::GViz)
+    cmd = gviz.cmd
+    svgCode = readchomp(`echo $(gviz.code)` |> `$cmd -Tsvg`)
+    print(io, "text/html", svgCode)
+end
+
+
 #########
 ## viz ##
 #########
@@ -84,9 +94,18 @@ end
 @doc doc"""
 Render chart to default output file.
 """->
-function render(data::Any;
-                chrt=JFinM_Charts.AbstractChart)
+function render(data::Any,
+                chrt::JFinM_Charts.AbstractChart)
     gviz = GViz(data, chrt)
     render(gviz)
+end
+
+#############################
+## default render settings ##
+#############################
+
+## conditioning tree
+function render(tr::CTreeParRef)
+    render(tr, CTreeChart())
 end
 

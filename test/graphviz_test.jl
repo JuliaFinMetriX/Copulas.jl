@@ -12,17 +12,18 @@ using JFinM_Charts
 tr = Copulas.CTreeParRef([0, 1, 2, 2])
 
 ## visualize directly
-gviz = Copulas.viz(tr, JFinM_Charts.chart(Copulas.CTreeChart))
+gviz = Copulas.render(tr, JFinM_Charts.chart(Copulas.CTreeChart))
+
+##
+gviz = Copulas.render(tr)
 
 ## visualize with chart options
-gviz = Copulas.viz(tr,
+gviz = Copulas.render(tr,
                    JFinM_Charts.chart(Copulas.CTreeChart,
                                       emph1 = [2],
                                       emphFillColor1 = "orange",
                                       emphShape1 = "ellipse"))
 
-## render to default tmp file
-Copulas.render(gviz)
 
 ## visualize gviz object
 ##----------------------
@@ -38,17 +39,17 @@ Copulas.render(gviz)
 
 vn = Copulas.testvine(3)
 
-Copulas.viz(vn, JFinM_Charts.chart(Copulas.VineTreesChart,
+gviz = Copulas.GViz(vn, JFinM_Charts.chart(Copulas.VineTreesChart,
                                    emph1 = [1, 3]))
-
+render(gviz)
 
 ####################
 ## VineGraphChart ##
 ####################
 
 vn = Copulas.testvine(3)
-Copulas.viz(vn, JFinM_Charts.chart(Copulas.VineGraphChart))
-
+gviz = Copulas.GViz(vn, JFinM_Charts.chart(Copulas.VineGraphChart))
+render(gviz)
 
 chrt = JFinM_Charts.chart(Copulas.VineGraphChart,
                           maxLayer=3,
@@ -57,7 +58,8 @@ chrt = JFinM_Charts.chart(Copulas.VineGraphChart,
                           lens=["1.0", "3.0", "5.0"],
                           weights=["1", "1", "1"])
 
-Copulas.viz(vn, chrt)
+
+render(Copulas.GViz(vn, chrt))
 
 
 chrt = JFinM_Charts.chart(Copulas.VineGraphChart,
@@ -66,10 +68,11 @@ chrt = JFinM_Charts.chart(Copulas.VineGraphChart,
                           colors=["black", "black"],
                           lens=["1.0", "1.8"],
                           weights=["1", "0"])
-Copulas.viz(vn, chrt)
+Copulas.render(vn, chrt)
 
 vn = Copulas.testvine(2)
-Copulas.viz(vn, Copulas.VineGraphChart())
+Copulas.render(vn, Copulas.VineGraphChart())
+
 
 ## Copulas.viz(tr)
 
