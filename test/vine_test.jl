@@ -18,10 +18,12 @@ display(Copulas.Vine([0 2; 1 0]))
 ## conversion functions ##
 ##########################
 
+## single CTreePaths
 dVine = Copulas.testvine(1)
 tPexp = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
 @test tPexp == Copulas.convert(Copulas.CTreePaths, dVine.trees[:, 3])
 
+## single CTreeParRef
 ctr = Copulas.CTreePaths(3, Array{Int, 1}[[4, 5, 6],[2, 1]])
 tPexp = convert(Copulas.CTreeParRef, ctr)
 @test tPexp == Copulas.convert(Copulas.CTreeParRef, dVine.trees[:, 3])
@@ -33,12 +35,16 @@ vn = Copulas.testvine(2)
 kk_tr = convert(Copulas.CTreePaths, vn)
 @test vn == Copulas.convert(Copulas.Vine, kk_tr)
 
+@test vn == Copulas.Vine(kk_tr)
+
 ## create vine with parent notation
 vn = Copulas.testvine(3)
 
 ## vine matrix to tree and back
-kk_tr = Copulas.convert(Copulas.CTreePaths, vn)
+kk_tr = Copulas.convert(Copulas.CTreeParRef, vn)
 @test vn == Copulas.convert(Copulas.Vine, kk_tr)
+
+@test vn == Copulas.Vine(kk_tr)
 
 ## unfinished vines
 ##-----------------

@@ -224,18 +224,18 @@ function display(tr::AbstractCTree)
     displayInner(trPaths)
 end
 
-## CTree arrays
-##-------------
-function display(trArr::Array{AbstractCTree, 1})
-    ## convert to array of CTreePaths and display that
-    nTrees = length(trArr)
-    for ii=1:nTrees
-        println("type: $(typeof(trArr[ii]))")
-        currTree = convert(CTreePaths, trArr[ii])
-        println("$(currTree.root):")
-        displayInner(currTree)
-    end
-end
+## ## CTree arrays
+## ##-------------
+## function display(trArr::Array{AbstractCTree, 1})
+##     ## convert to array of CTreePaths and display that
+##     nTrees = length(trArr)
+##     for ii=1:nTrees
+##         println("type: $(typeof(trArr[ii]))")
+##         currTree = convert(CTreePaths, trArr[ii])
+##         println("$(currTree.root):")
+##         displayInner(currTree)
+##     end
+## end
 
 function display(trArr::Array{CTreePaths, 1})
     ## convert to array of CTreePaths and display that
@@ -388,10 +388,10 @@ function allNodes(tr::CTreeParRef)
     return find(tr.tree .>= 0)
 end
 
-function allNodes(tr::AbstractCTree)
-    trPar = convert(CTreeParRef, tr)
-    return allNodes(trPar)
-end
+## function allNodes(tr::AbstractCTree)
+##     trPar = convert(CTreeParRef, tr)
+##     return allNodes(trPar)
+## end
 
 @doc doc"""
 `Array{Int, 1}` of all occurring values in a tree, excluding the root
@@ -406,10 +406,10 @@ function allPathNodes(tr::CTreeParRef)
     return find(tr.tree .> 0)
 end
 
-function allPathNodes(tr::AbstractCTree)
-    trPar = convert(CTreeParRef, tr)
-    return allPathNodes(trPar)
-end
+## function allPathNodes(tr::AbstractCTree)
+##     trPar = convert(CTreeParRef, tr)
+##     return allPathNodes(trPar)
+## end
 
 
 ## getRoot

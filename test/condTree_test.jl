@@ -17,7 +17,7 @@ tP = Copulas.CTreePaths(9, paths)
 tP1 = Copulas.CTreePaths(9, [1, 4], [1, 2, 3], [5, 6], [5, 7, 8])
 
 @test tP == tP1
-@test tP.paths[3] == [5, 6]
+@test Copulas.dg(tP)[3] == [5, 6]
 
 ## sorting paths
 paths = Array{Int, 1}[[1, 4], [1, 2, 3], [5, 6], [5, 7, 8]]
@@ -30,7 +30,7 @@ sortedPaths = Array{Int, 1}[[1, 2, 3], [1, 4], [5, 6], [5, 7, 8]]
 ## test conversion
 tPar = convert(Copulas.CTreeParRef, tP)
 parNot = [9, 1, 2, 1, 9, 5, 5, 7, 0]
-@test tPar.tree == parNot
+@test Copulas.dg(tPar) == parNot
 
 tPar2 = Copulas.CTreeParRef(parNot)
 @test tPar == tPar2
@@ -43,6 +43,9 @@ tPaths = Copulas.CTreePaths(9, [1, 4], [1, 2, 3], [5, 7, 8])
 @test !(tPar == tPaths)
 tPar2 = convert(Copulas.CTreeParRef, tPaths)
 @test tPar == tPar2
+
+@test tPar == convert(Copulas.CTreeParRef, tPar)
+@test tPaths == convert(Copulas.CTreePaths, tPaths)
 
 #########################
 ## dimension functions ##
@@ -88,6 +91,17 @@ tPar = convert(Copulas.CTreeParRef, tP)
 display(tPar)
 display([tPar, tPar])
 
+##############
+## getindex ##
+##############
+
+paths = Array{Int, 1}[[1, 4], [1, 2, 3], [5, 6], [5, 7, 8]]
+tr = Copulas.CTreePaths(9, paths)
+
+@test tr[3, 2] == 6
+@test tr[3] == [5, 6]
+@test tr[[3, 4], [2, 3]] == [6, 8]
+
 ################
 ## tree nodes ##
 ################
@@ -99,9 +113,12 @@ tr2 = convert(Copulas.CTreeParRef, tr1)
 allTrees = [tr1, tr2]
 
 for tr in allTrees
-    @test Copulas.allNodes(tr1) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
-    @test Copulas.allPathNodes(tr1) == [1, 2, 3, 4, 5, 6, 7, 8]
+    @test Copulas.allNodes(tr) == [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    @test Copulas.allPathNodes(tr) == [1, 2, 3, 4, 5, 6, 7, 8]
 end
+
+@test 9 == Copulas.getRoot(tr1)
+@test 9 == Copulas.getRoot(tr2)
 
 #######################
 ## conditioning sets ##
