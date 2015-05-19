@@ -17,6 +17,7 @@ type VineTreesChart <: JFinM_Charts.AbstractChart
     rootEmphShape1::String
 end
 
+## define default values
 VineTreesChart() = VineTreesChart("VineTreesChart",
                                   "dot",
                                   "circle",
@@ -28,6 +29,14 @@ VineTreesChart() = VineTreesChart("VineTreesChart",
                                   [], "lawngreen",
                                   "black", "circle"
                                   )
+
+function GViz(vn)
+    return GViz(vn, VineTreesChart())
+end
+
+##########
+## GViz ##
+##########
 
 function GViz(vn::Copulas.Vine, chrt::VineTreesChart)
     dotCode = ""

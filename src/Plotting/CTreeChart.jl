@@ -39,7 +39,7 @@ function GViz(tr::CTreeParRef, chrt::CTreeChart)
     dotCode = string(dotCode, "edge [arrowhead=$(chrt.arrowhead)];\n")
     for ii=1:nVars
         parNode = tr.tree[ii]
-        if parNode != 0
+        if parNode > 0
             if ii in chrt.emph1
                 dotCode = string(dotCode, "$ii [style=filled; fillcolor=$(chrt.emphFillColor1); shape=$(chrt.emphShape1)];")
             elseif ii in chrt.emph2

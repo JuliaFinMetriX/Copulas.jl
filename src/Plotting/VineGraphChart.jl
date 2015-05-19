@@ -9,6 +9,7 @@ type VineGraphChart <: JFinM_Charts.AbstractChart
     weights::Array{String, 1}
 end
 
+## define default values
 VineGraphChart() = VineGraphChart("VineGraphChart",
                                   "neato",
                                   "circle",
@@ -18,7 +19,6 @@ VineGraphChart() = VineGraphChart("VineGraphChart",
                                   ["1.0", "1.8"],
                                   ["1", "1"]
                                   )
-
 
 function GViz(vn::Copulas.Vine,
               chrt::VineGraphChart)
