@@ -4,6 +4,28 @@ using Copulas
 using Base.Test
 using JFinM_Charts
 
+############################
+## graphviz general tests ##
+############################
+
+## get data
+tr = Copulas.CTreeParRef([0, 1, 2, 2])
+
+fname = tempname()
+Copulas.render(tr, Copulas.CTreeChart(), "png", fname)
+
+## default charts
+##---------------
+
+tr = Copulas.CTreeParRef([0, 1, 2, 2])
+Copulas.render(tr)
+
+tr2 = convert(Copulas.CTreePaths, tr)
+Copulas.render(tr2)
+
+vn = Copulas.testvine(2)
+Copulas.render(vn)
+
 ################
 ## CTreeChart ##
 ################
@@ -11,11 +33,33 @@ using JFinM_Charts
 ## get data
 tr = Copulas.CTreeParRef([0, 1, 2, 2])
 
+## default chart
+gviz = Copulas.GViz(tr, Copulas.CTreeChart())
+Copulas.render(gviz)
+
+@test_throws Exception gviz = Copulas.GViz(tr,
+                                           JFinM_Charts.chart(Copulas.CTreeChart,
+                                                              emph1 = [2, 4],
+                                                              emph2 = [2, 5]))
+
 ## visualize directly
 gviz = Copulas.render(tr, JFinM_Charts.chart(Copulas.CTreeChart))
 
-##
-gviz = Copulas.render(tr)
+## two emphasized sets
+gviz = Copulas.GViz(tr, JFinM_Charts.chart(Copulas.CTreeChart,
+                                           emph1 = [1, 3],
+                                           emph2 = [2, 4],
+                                           emphFillColor2 = "red"
+                                           ))
+Copulas.render(gviz)
+
+## visualize CTreePaths instance
+tr2 = convert(Copulas.CTreePaths, tr)
+gviz = Copulas.GViz(tr2, JFinM_Charts.chart(Copulas.CTreeChart))
+Copulas.viz(gviz)
+
+## render data directly
+Copulas.render(tr)
 
 ## visualize with chart options
 gviz = Copulas.render(tr,
@@ -41,6 +85,20 @@ vn = Copulas.testvine(3)
 
 gviz = Copulas.GViz(vn, JFinM_Charts.chart(Copulas.VineTreesChart,
                                    emph1 = [1, 3]))
+Copulas.render(gviz)
+
+## default chart
+Copulas.render(vn)
+
+## with emphasized variables
+gviz = Copulas.GViz(vn, JFinM_Charts.chart(Copulas.VineTreesChart,
+                                           emph1 = [1, 3],
+                                           emph2 = [4],
+                                           emphFillColor2 = "red",
+                                           rootEmph = [2],
+                                           rootEmphFillColor1 = "orange"
+                                           ))
+
 Copulas.render(gviz)
 
 ####################
