@@ -30,7 +30,7 @@ gviz = Copulas.render(tr,
 
 ## first create gviz object
 gviz = Copulas.GViz(tr, JFinM_Charts.chart(Copulas.CTreeChart))
-Copulas.viz(gviz)
+# Copulas.viz(gviz)
 Copulas.render(gviz)
 
 ####################
